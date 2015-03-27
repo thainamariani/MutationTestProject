@@ -25,7 +25,9 @@ public class MutationTest_Multithread {
     private static volatile String consoleToken = ">";
 
     private static final String[] INSTANCES = {
-        "instances/bisect.txt",};
+        "instances/bisect.txt",
+        "instances/bub.txt"
+    };
 
     private static final String[] ALGORITHMS = {
         "gGa",

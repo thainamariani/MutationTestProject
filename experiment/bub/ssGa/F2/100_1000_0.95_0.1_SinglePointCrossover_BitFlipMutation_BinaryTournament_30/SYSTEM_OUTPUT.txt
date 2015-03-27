@@ -1,0 +1,18 @@
+Parameters Information
+----------------------------------------------------
+Instance: instances/bub.txt
+Algorithm: jmetal.metaheuristics.singleObjective.geneticAlgorithm.ssGA@19db3e20
+Fitness Function: F2
+Population: 100
+maxEvaluations: 100000
+crossoverProbability: 0.95
+mutationsProbability; 0.1
+crossoverOperator: SinglePointCrossover
+mutationOperator: BitFlipMutation
+selectionOperator: BinaryTournament
+executions: 30
+----------------------------------------------------
+Evaluations: 100000
+Total time of execution: 5151
+Objectives values have been writen to file experiment/bub/ssGa/F2/100_1000_0.95_0.1_SinglePointCrossover_BitFlipMutation_BinaryTournament_30/FUN
+Variables values have been writen to file experiment/bub/ssGa/F2/100_1000_0.95_0.1_SinglePointCrossover_BitFlipMutation_BinaryTournament_30/FUN

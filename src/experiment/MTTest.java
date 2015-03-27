@@ -214,7 +214,7 @@ public class MTTest {
 
         //fitness function
         if (args[10] == null || args[10].trim().equals("")) {
-            System.out.println("Missing fitnee function argument.");
+            System.out.println("Missing fitnees function argument.");
             System.exit(1);
         }
 

@@ -1,6 +1,6 @@
 Parameters Information
 ----------------------------------------------------
-Instance: instances/bisect.txt
+Instance: instances/bub.txt
 Algorithm: jmetal.metaheuristics.singleObjective.geneticAlgorithm.ssGA@16bf4472
 Fitness Function: F1
 Population: 100
@@ -13,6 +13,6 @@ selectionOperator: BinaryTournament
 executions: 30
 ----------------------------------------------------
 Evaluations: 100000
-Total time of execution: 1233
-Objectives values have been writen to file experiment/bisect/ssGa/F1/100_1000_0.95_0.1_SinglePointCrossover_BitFlipMutation_BinaryTournament_30/FUN
-Variables values have been writen to file experiment/bisect/ssGa/F1/100_1000_0.95_0.1_SinglePointCrossover_BitFlipMutation_BinaryTournament_30/FUN
+Total time of execution: 6108
+Objectives values have been writen to file experiment/bub/ssGa/F1/100_1000_0.95_0.1_SinglePointCrossover_BitFlipMutation_BinaryTournament_30/FUN
+Variables values have been writen to file experiment/bub/ssGa/F1/100_1000_0.95_0.1_SinglePointCrossover_BitFlipMutation_BinaryTournament_30/FUN

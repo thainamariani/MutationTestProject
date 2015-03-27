@@ -146,7 +146,7 @@ public class MutationTestProblem extends Problem {
 
     public double fitnessFunction(double alfa, double beta, double mutationScore, double numberOfSelectedTestCases, double numberOfTestCases) {
         double minimizationScore = ((1.0 / numberOfTestCases) * numberOfSelectedTestCases);
-        return (alfa * mutationScore) + (beta * minimizationScore);
+        return (alfa * mutationScore) - (beta * minimizationScore);
     }
 
     public int getNumberOfSelectedTestSuite(Binary solution) {
