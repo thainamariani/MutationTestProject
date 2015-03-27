@@ -118,4 +118,60 @@ public class MutationTestProblemTest {
         
         assertEquals(4, p.getNumberOfDifferentKilledMutants(solution));
     }
+    
+    @Test
+    public void FitnessFunctionsAreCorrect(){
+        int[][] coverage = {
+            {1, 0, 1},
+            {0, 1, 0},
+            {1, 0, 1},
+            {1, 0, 0},
+        };
+        
+        MutationTestProblem p = new MutationTestProblem(3, 4, coverage);
+        
+        //Solution[1, 1, 1]
+        Binary solution = new Binary(3);
+        solution.setIth(0, true);
+        solution.setIth(1, true);
+        solution.setIth(2, true);
+        
+        double mutantionScore = p.getMutantionScore(solution);
+        assertEquals(1, mutantionScore, 0);
+        assertEquals(0.33, p.fitnessFunction(mutantionScore, 3), 0.01);
+        assertEquals(2, p.fitnessFunction(1, 1, mutantionScore, 3, 3), 0);
+        
+        //Solution[1, 1, 0]
+        solution = new Binary(3);
+        solution.setIth(0, true);
+        solution.setIth(1, true);
+        solution.setIth(2, false);
+        
+        mutantionScore = p.getMutantionScore(solution);
+        assertEquals(1, mutantionScore, 0);
+        assertEquals(0.5, p.fitnessFunction(mutantionScore, 2), 0);
+        assertEquals(1.66, p.fitnessFunction(1, 1, mutantionScore, 2, 3), 0.01);
+        
+        //Solution[1, 0, 0]
+        solution = new Binary(3);
+        solution.setIth(0, true);
+        solution.setIth(1, false);
+        solution.setIth(2, false);
+        
+        mutantionScore = p.getMutantionScore(solution);
+        assertEquals(0.75, mutantionScore, 0);
+        assertEquals(0.75, p.fitnessFunction(mutantionScore, 1), 0);
+        assertEquals(1.08, p.fitnessFunction(1, 1, mutantionScore, 1, 3), 0.01);
+        
+        //Solution[0, 1, 0]
+        solution = new Binary(3);
+        solution.setIth(0, false);
+        solution.setIth(1, true);
+        solution.setIth(2, false);
+        
+        mutantionScore = p.getMutantionScore(solution);
+        assertEquals(0.25, mutantionScore, 0);
+        assertEquals(0.25, p.fitnessFunction(mutantionScore, 1), 0);
+        assertEquals(0.58, p.fitnessFunction(1, 1, mutantionScore, 1, 3), 0.01);
+    }
 }

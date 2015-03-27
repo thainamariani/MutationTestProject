@@ -30,12 +30,13 @@ public class MutationTestProblem extends Problem {
 
 //    private final List<TestCase> testCases;
 //    private final List<Mutant> mutants;
-
     private int[][] coverage;
 
     private int numberOfTestSuite;
 
     private int numberOfMutants;
+
+    private int fitnessFunction;
 
     public MutationTestProblem(int numberOfTestSuite, int numberOfMutants, int[][] coverage) {
         this.coverage = coverage;
@@ -46,15 +47,15 @@ public class MutationTestProblem extends Problem {
         numberOfObjectives_ = 1;
         numberOfConstraints_ = 0;
         numberOfVariables_ = 1;
-        length_       = new int[numberOfVariables_];
-        length_      [0] = numberOfTestSuite ;
+        length_ = new int[numberOfVariables_];
+        length_[0] = numberOfTestSuite;
         problemName_ = "Mutant Test Problem";
         solutionType_ = new BinarySolutionType(this);
 //        this.testCases = null;
 //        this.mutants = null;
     }
 
-    public MutationTestProblem(String filename) {
+    public MutationTestProblem(String filename, int fitnessFunction) {
         // Read Instance's file
         InstanceReader reader = new InstanceReader(filename);
 
@@ -62,14 +63,15 @@ public class MutationTestProblem extends Problem {
         this.numberOfTestSuite = reader.readInt();
         this.numberOfMutants = reader.readInt();
         this.coverage = reader.readIntMatrix(numberOfMutants, numberOfTestSuite, " ");
+        this.fitnessFunction = fitnessFunction;
         reader.close();
 
         // JMetal's Settings
         numberOfObjectives_ = 1;
         numberOfConstraints_ = 0;
         numberOfVariables_ = 1;
-        length_       = new int[numberOfVariables_];
-        length_      [0] = numberOfTestSuite ;
+        length_ = new int[numberOfVariables_];
+        length_[0] = numberOfTestSuite;
         problemName_ = "Mutant Test Problem";
         solutionType_ = new BinarySolutionType(this);
 //        this.testCases = null;
@@ -85,7 +87,6 @@ public class MutationTestProblem extends Problem {
 //        problemName_ = "Mutant Test Problem";
 //        solutionType_ = new BinarySolutionType(this);
 //    }
-
     @Override
     public void evaluate(Solution solution) throws JMException {
         //variable = vector positions
@@ -101,17 +102,22 @@ public class MutationTestProblem extends Problem {
 //                killedMutants.addAll(testCase.getKilledMutants());
 //            }
 //        }
-        
+
         //mutation score calculation
-        int deadMutants = getNumberOfDifferentKilledMutants(s); //dm(p,t)
-        double totalMutants = numberOfMutants; //m(p)
-        double mutationScore = (double) deadMutants / (double) totalMutants; //ms(p,t)
+        //int deadMutants = getNumberOfDifferentKilledMutants(s); //dm(p,t)
+        //double totalMutants = numberOfMutants; //m(p)
+        //double mutationScore = (double) deadMutants / (double) totalMutants; //ms(p,t)
+        double mutationScore = getMutantionScore(s);
         double numberOfSelectedTestSuite = getNumberOfSelectedTestSuite(s);
-        
+
         //fitness function calculation
-//        double result = fitnessFunction(mutationScore, numberOfSelectedTestSuite);
-        double result = fitnessFunction(1, 1, mutationScore, numberOfSelectedTestSuite, numberOfTestSuite);
-        
+        double result;
+        if (fitnessFunction == 1) {
+            result = fitnessFunction(mutationScore, numberOfSelectedTestSuite);
+        } else {
+            result = fitnessFunction(1, 1, mutationScore, numberOfSelectedTestSuite, numberOfTestSuite);
+        }
+
         solution.setObjective(0, -result);
 
 //        //mutation score calculation
@@ -125,8 +131,14 @@ public class MutationTestProblem extends Problem {
 //        solution.setObjective(0, result);
     }
 
+    public double getMutantionScore(Binary s) {
+        int deadMutants = getNumberOfDifferentKilledMutants(s); //dm(p,t)
+        double totalMutants = numberOfMutants; //m(p)
+        return (double) deadMutants / (double) totalMutants; //ms(p,t)
+    }
+
     public double fitnessFunction(double mutationScore, double numberOfSelectedTestCases) {
-        if(numberOfSelectedTestCases == 0){
+        if (numberOfSelectedTestCases == 0) {
             return 0;
         }
         return mutationScore / numberOfSelectedTestCases;
@@ -136,20 +148,20 @@ public class MutationTestProblem extends Problem {
         double minimizationScore = ((1.0 / numberOfTestCases) * numberOfSelectedTestCases);
         return (alfa * mutationScore) + (beta * minimizationScore);
     }
-    
-    public int getNumberOfSelectedTestSuite(Binary solution){
-        if(solution == null){
+
+    public int getNumberOfSelectedTestSuite(Binary solution) {
+        if (solution == null) {
             throw new IllegalArgumentException("Solution cannot be null");
         }
-        
+
         int total = 0;
-        
+
         for (int i = 0; i < solution.getNumberOfBits(); i++) {
             if (solution.getIth(i)) {
                 total++;
             }
         }
-        
+
         return total;
     }
 
@@ -170,10 +182,10 @@ public class MutationTestProblem extends Problem {
     }
 
     public int getNumberOfDifferentKilledMutants(Binary solution) {
-        if(solution == null){
+        if (solution == null) {
             throw new IllegalArgumentException("Solution cannot be null");
         }
-        
+
         int[] visited = new int[numberOfMutants];
         int total = 0;
 
@@ -186,7 +198,7 @@ public class MutationTestProblem extends Problem {
                         visited[j] = 1;
                         total++;
                     }
-                }                
+                }
             }
         }
 
