@@ -12,7 +12,6 @@ import jmetal.operators.mutation.MutationFactory;
 import jmetal.operators.selection.SelectionFactory;
 import jmetal.util.JMException;
 import problem.MutationTestProblem;
-import util.Results;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -80,19 +79,20 @@ public class MTTest {
         algorithm.addOperator("selection", selection);
 
         /* Execute the Algorithm */
-        long initTime = System.currentTimeMillis();
-        SolutionSet population = algorithm.execute();
-        long estimatedTime = System.currentTimeMillis() - initTime;
-        System.out.println("Total time of execution: " + estimatedTime);
+        for (int i = 0; i < executions; i++) {
+            System.out.println("Run: " +i);
+            long initTime = System.currentTimeMillis();
+            SolutionSet population = algorithm.execute();
+            long estimatedTime = System.currentTimeMillis() - initTime;
+            System.out.println("Total time of execution: " + estimatedTime);
+            /* Log messages */
+            String path = "experiment/" + getInstanceName(instance) + "/" + algo + "/F" + fitnessFunction + "/" + context;
+            System.out.println("Objectives values have been writen to file " + path + "/" + "FUN_" + i);
+            population.printObjectivesToFile(path + "/" + "FUN_" + i);
+            System.out.println("Variables values have been writen to file " + path + "/" + "FUN_" + i);
+            population.printVariablesToFile(path + "/" + "VAR_" + i);
+        }
 
-        /* Log messages */
-        Results results = new Results();
-
-        String path = "experiment/" + getInstanceName(instance) + "/" + algo + "/F" + fitnessFunction + "/" + context;
-        System.out.println("Objectives values have been writen to file " + path + "/" + "FUN");
-        population.printObjectivesToFile(path + "/" + "FUN");
-        System.out.println("Variables values have been writen to file " + path + "/" + "FUN");
-        population.printVariablesToFile(path + "/" + "VAR");
     }
 
     private static void verifyParameters(String[] args) {

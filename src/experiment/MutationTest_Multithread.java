@@ -25,23 +25,22 @@ public class MutationTest_Multithread {
     private static volatile String consoleToken = ">";
 
     private static final String[] INSTANCES = {
-        "instances/bisect.txt",
         "instances/bub.txt"
     };
 
     private static final String[] ALGORITHMS = {
-        "gGa",
+        //"gGa",
         "ssGa"
     };
 
     private static final int[] POPULATION_SIZE = {
-        50,
+        //50,
         100,
-        200
+        //200
     };
 
     private static final int[] GENERATIONS = {
-        1000
+        10000
     };
 
     private static final double[] CROSSOVER_PROBABILITY = {
@@ -65,7 +64,7 @@ public class MutationTest_Multithread {
     };
 
     private static final int[] FITNESS_FUNCTIONS = {
-        1,
+        //1,
         2
     };
 
