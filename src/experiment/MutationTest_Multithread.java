@@ -26,20 +26,20 @@ public class MutationTest_Multithread {
 
     private static final String[] INSTANCES = {
         "instances/bisect.txt",
-        "instances/bub.txt",
+        "instances/bub.txt"/*,
         "instances/find.txt",
         "instances/fourballs.txt",
         "instances/mid.txt",
-        "instances/trityp.txt"
+        "instances/trityp.txt"  */
     };
 
-    private static final String[] ALGORITHMS = {
-        "gGa",
-        "ssGa"
+    private static final MutationMetaheuristic[] ALGORITHMS = {
+        //MutationMetaheuristic.gGa,
+        //MutationMetaheuristic.ssGa,
+        MutationMetaheuristic.HillClimbingA
     };
 
     private static final int[] POPULATION_SIZE = {
-        50,
         100,
         200
     };
@@ -77,7 +77,13 @@ public class MutationTest_Multithread {
         2
     };
 
-    private static final int EXECUTIONS = 30;
+    // Hill Climbing
+    private static final int[] IMPROVEMENT_ROUNDS = {
+        500,
+        1000
+    };
+
+    private static final int EXECUTIONS = 1;
 
     private static synchronized void initialize() {
         ACTIVE_THREADS = new ArrayList<>();
@@ -126,7 +132,7 @@ public class MutationTest_Multithread {
             }
         } catch (Exception ex) {
             for (final String instance : INSTANCES) {
-                for (final String algorithm : ALGORITHMS) {
+                for (final MutationMetaheuristic algorithm : ALGORITHMS) {
                     for (final int fitnessFunction : FITNESS_FUNCTIONS) {
                         for (final int populationSize : POPULATION_SIZE) {
                             for (final int generations : GENERATIONS) {
@@ -135,8 +141,9 @@ public class MutationTest_Multithread {
                                         for (final String crossoverOperator : CROSSOVER_OPERATORS) {
                                             for (final String mutationOperator : MUTATION_OPERATORS) {
                                                 for (final String selectionOperator : SELECTION_OPERATORS) {
-                                                    createThread(instance, algorithm, populationSize, generations, crossoverProbability, mutationProbability, crossoverOperator, mutationOperator, EXECUTIONS, fitnessFunction, selectionOperator);
-
+                                                    for (final int improvementRounds : IMPROVEMENT_ROUNDS) {
+                                                        createThread(instance, algorithm, populationSize, generations, crossoverProbability, mutationProbability, crossoverOperator, mutationOperator, EXECUTIONS, fitnessFunction, selectionOperator, improvementRounds);
+                                                    }
                                                 }
                                             }
                                         }
@@ -194,8 +201,10 @@ public class MutationTest_Multithread {
                         }
                         try {
                             Thread.sleep(10000);
+
                         } catch (InterruptedException ex) {
-                            Logger.getLogger(MutationTest_Multithread.class.getName()).log(Level.SEVERE, null, ex);
+                            Logger.getLogger(MutationTest_Multithread.class
+                                    .getName()).log(Level.SEVERE, null, ex);
                         }
                     }
 
@@ -305,7 +314,7 @@ public class MutationTest_Multithread {
         //instance_algorithms_populationSize_generations_crossoverProbability_mutationProbability_crossoverOperator_mutationOperator_executions
         String[] split = context.split("_");
         final String instance = String.valueOf(split[1]);
-        final String algorithm = String.valueOf(split[2]);
+        final MutationMetaheuristic algorithm = MutationMetaheuristic.valueOf(split[2]);
         final int populationSize = Integer.valueOf(split[3]);
         final int generations = Integer.valueOf(split[4]);
         final double crossoverProbability = Double.valueOf(split[5]);
@@ -314,18 +323,20 @@ public class MutationTest_Multithread {
         final String mutationOperator = String.valueOf(split[8]);
         final int executions = Integer.valueOf(split[9]);
         final int fitnessFunction = Integer.valueOf(split[10]);
-        createThread(instance, algorithm, populationSize, generations, crossoverProbability, mutationProbability, crossoverOperator, mutationOperator, executions, fitnessFunction, context);
+        final int improvementRounds = Integer.valueOf(split[11]);
+
+        createThread(instance, algorithm, populationSize, generations, crossoverProbability, mutationProbability, crossoverOperator, mutationOperator, executions, fitnessFunction, context, improvementRounds);
     }
 
-    private static synchronized void createThread(final String instance, final String algorithm, final int populationSize, final int generations, final double crossoverProbability, final double mutationProbability, final String crossoverOperator, final String mutationOperator, final int executions, final int fitnessFunction, final String selectionOperator) {
-        final String context = getContext(populationSize, generations, crossoverProbability, mutationProbability, crossoverOperator, mutationOperator, executions, selectionOperator);
+    private static synchronized void createThread(final String instance, final MutationMetaheuristic algorithm, final int populationSize, final int generations, final double crossoverProbability, final double mutationProbability, final String crossoverOperator, final String mutationOperator, final int executions, final int fitnessFunction, final String selectionOperator, final int improvementRounds) {
+        final String context = getContext(algorithm, populationSize, generations, crossoverProbability, mutationProbability, crossoverOperator, mutationOperator, executions, selectionOperator, improvementRounds);
         //String.valueOf(maxEvaluations)
         //String.valueOf(mutationProbability), style
         //);
-        createThread(instance, algorithm, populationSize, generations, crossoverProbability, mutationProbability, crossoverOperator, mutationOperator, executions, fitnessFunction, context, selectionOperator);
+        createThread(instance, algorithm, populationSize, generations, crossoverProbability, mutationProbability, crossoverOperator, mutationOperator, executions, fitnessFunction, context, selectionOperator, improvementRounds);
     }
 
-    private static synchronized void createThread(final String instance, final String algorithm, final int populationSize, final int generations, final double crossoverProbability, final double mutationProbability, final String crossoverOperator, final String mutationOperator, final int executions, final int fitnessFunction, final String context, final String selectionOperator) {
+    private static synchronized void createThread(final String instance, final MutationMetaheuristic algorithm, final int populationSize, final int generations, final double crossoverProbability, final double mutationProbability, final String crossoverOperator, final String mutationOperator, final int executions, final int fitnessFunction, final String context, final String selectionOperator, final int improvementRounds) {
         final Thread thread = new Thread(new Runnable() {
 
             private Process process = null;
@@ -335,7 +346,7 @@ public class MutationTest_Multithread {
                 try {
                     ProcessBuilder builder = new ProcessBuilder("java", "-XX:MaxPermSize=1G", "-Xmx5G", "-classpath", "dist/MutationTestProject.jar", "experiment.MTTest",
                             "" + instance,
-                            "" + algorithm,
+                            "" + algorithm.toString(),
                             "" + populationSize,
                             "" + generations,
                             "" + crossoverProbability,
@@ -345,7 +356,8 @@ public class MutationTest_Multithread {
                             "" + executions,
                             "" + context,
                             "" + fitnessFunction,
-                            "" + selectionOperator
+                            "" + selectionOperator,
+                            "" + improvementRounds
                     );
                     final File destination = new File("experiment/" + getInstanceName(instance) + "/" + algorithm + "/F" + fitnessFunction + "/" + context + "/SYSTEM_OUTPUT.txt");
                     final File errorDestination = new File("experiment/" + getInstanceName(instance) + "/" + algorithm + "/F" + fitnessFunction + "/" + context + "/SYSTEM_ERROR.txt");
@@ -365,9 +377,11 @@ public class MutationTest_Multithread {
                         threadError(this, context, exitStatus);
                     } else {
                         FINISHED_THREADS.add(context);
+
                     }
                 } catch (IOException | InterruptedException ex) {
-                    Logger.getLogger(MutationTest_Multithread.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(MutationTest_Multithread.class
+                            .getName()).log(Level.SEVERE, null, ex);
                 } finally {
                     if (process != null) {
                         process.destroy();
@@ -455,8 +469,13 @@ public class MutationTest_Multithread {
         return new ArrayList<>(FINISHED_THREADS);
     }
 
-    public static synchronized String getContext(final int populationSize, final int generations, final double crossoverProbability, final double mutationProbability, final String crossoverOperator, final String mutationOperator, final int executions, final String selectionOperator) {
-        return populationSize + "_" + generations + "_" + crossoverProbability + "_" + mutationProbability + "_" + crossoverOperator + "_" + mutationOperator + "_" + selectionOperator + "_" + executions;
+    public static synchronized String getContext(final MutationMetaheuristic algorithm, final int populationSize, final int generations, final double crossoverProbability, final double mutationProbability, final String crossoverOperator, final String mutationOperator, final int executions, final String selectionOperator, final int improvementRounds) {
+        switch (algorithm) {
+            case HillClimbingA:
+                return String.format("%s_%s_%s", improvementRounds, mutationOperator, executions);
+            default:
+                return populationSize + "_" + generations + "_" + crossoverProbability + "_" + mutationProbability + "_" + crossoverOperator + "_" + mutationOperator + "_" + selectionOperator + "_" + executions;
+        }
     }
 
     public static void main(String[] args) throws InterruptedException {

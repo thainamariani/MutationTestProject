@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package jmetal.metaheuristics.singleObjective.HillClimbing;
+package jmetal.metaheuristics.hillClimbing;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -23,7 +23,7 @@ import jmetal.util.comparators.OverallConstraintViolationComparator;
  *
  * @author Prado Lima
  */
-public class HillClimbing extends LocalSearch {
+public class HillClimbingLS extends LocalSearch {
 
     /**
      * Stores the problem to solve
@@ -53,7 +53,7 @@ public class HillClimbing extends LocalSearch {
      * @param parameters The parameters
      *
      */
-    public HillClimbing(HashMap<String, Object> parameters) {
+    public HillClimbingLS(HashMap<String, Object> parameters) {
         super(parameters);
 
         if (parameters.get("problem") != null) {
