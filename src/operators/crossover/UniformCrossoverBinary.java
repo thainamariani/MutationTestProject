@@ -36,7 +36,7 @@ import jmetal.encodings.variable.Binary;
  * This class allows to apply a two points crossover operator using two parent
  * solutions. NOTE: the type of the solutions must be Binary..
  */
-public class TwoPointsCrossoverBinary extends Crossover {
+public class UniformCrossoverBinary extends Crossover {
 
     /**
      * Valid solution types to apply this operator
@@ -46,25 +46,22 @@ public class TwoPointsCrossoverBinary extends Crossover {
     private Double crossoverProbability_ = null;
 
     /**
-     * Constructor Creates a new intance of the two point crossover operator
+     * Constructor Creates a new intance of the uniform crossover operator
      */
-    public TwoPointsCrossoverBinary(HashMap<String, Object> parameters) {
+    public UniformCrossoverBinary(HashMap<String, Object> parameters) {
         super(parameters);
 
         if (parameters.get("probability") != null) {
             crossoverProbability_ = (Double) parameters.get("probability");
         }
-    } // TwoPointsCrossover
+    } // UniformCrossover
 
     /**
      * Constructor
      *
      * @param A properties containing the Operator parameters Creates a new
-     * intance of the two point crossover operator
+     * intance of the uniform crossover operator
      */
-    //public TwoPointsCrossover(Properties properties) {
-    //	this();
-    //}
     /**
      * Perform the crossover operation
      *
@@ -84,21 +81,10 @@ public class TwoPointsCrossoverBinary extends Crossover {
 
         if (parent1.getType().getClass() == BinarySolutionType.class) {
             if (PseudoRandom.randDouble() < probability) {
-                int numberOfBits = ((Binary) parent1.getDecisionVariables()[0]).getNumberOfBits();
-
-                // STEP 1: Get two cutting points
-                //initial point
-                int crosspoint1 = PseudoRandom.randInt(1, numberOfBits - 2);
-                //final point
-                int crosspoint2 = PseudoRandom.randInt(1, numberOfBits - 2);
-
-                while (crosspoint2 == crosspoint1) {
-                    crosspoint2 = PseudoRandom.randInt(1, numberOfBits - 2);
-                }
-                createOffsprings(parent1, parent2, crosspoint1, crosspoint2, offspring);
+                createOffsprings(parent1, parent2, offspring);
             }
         } else {
-            Configuration.logger_.severe("TwoPointsCrossoverBinary.doCrossover: invalid "
+            Configuration.logger_.severe("UniformCrossoverBinary.doCrossover: invalid "
                     + "type"
                     + parent1.getDecisionVariables()[0].getVariableType());
             Class cls = java.lang.String.class;
@@ -109,23 +95,21 @@ public class TwoPointsCrossoverBinary extends Crossover {
         return offspring;
     }
 
-    public void createOffsprings(Solution parent1, Solution parent2, int crosspoint1, int crosspoint2, Solution[] offspring) {
+    private void createOffsprings(Solution parent1, Solution parent2, Solution[] offspring) {
+        int numberOfBits = ((Binary) parent1.getDecisionVariables()[0]).getNumberOfBits();
 
-        if (crosspoint1 > crosspoint2) {
-            int swap;
-            swap = crosspoint1;
-            crosspoint1 = crosspoint2;
-            crosspoint2 = swap;
+        for (int i = 0; i < numberOfBits; i++) {
+            boolean geneParent1 = ((Binary) parent1.getDecisionVariables()[0]).getIth(i);
+            boolean geneParent2 = ((Binary) parent2.getDecisionVariables()[0]).getIth(i);
+            int random = PseudoRandom.randInt(0, 1);
+            insertValues(random, offspring, i, geneParent2, geneParent1);
         }
-        // STEP 2: Obtain the first child
-        for (int i = crosspoint1; i <= crosspoint2; i++) {
-            boolean value = ((Binary) parent2.getDecisionVariables()[0]).getIth(i);
-            ((Binary) offspring[0].getDecisionVariables()[0]).setIth(i, value);
-        }
-        // STEP 3: Obtain the second child
-        for (int i = crosspoint1; i <= crosspoint2; i++) {
-            boolean value = ((Binary) parent1.getDecisionVariables()[0]).getIth(i);
-            ((Binary) offspring[1].getDecisionVariables()[0]).setIth(i, value);
+    }
+
+    public void insertValues(int random, Solution[] offspring, int i, boolean geneParent2, boolean geneParent1) {
+        if (random == 1) {
+            ((Binary) offspring[0].getDecisionVariables()[0]).setIth(i, geneParent2);
+            ((Binary) offspring[1].getDecisionVariables()[0]).setIth(i, geneParent1);
         }
     }
 
@@ -143,7 +127,7 @@ public class TwoPointsCrossoverBinary extends Crossover {
         if (!(VALID_TYPES.contains(parents[0].getType().getClass())
                 && VALID_TYPES.contains(parents[1].getType().getClass()))) {
 
-            Configuration.logger_.severe("TwoPointsCrossoverBinary.execute: the solutions "
+            Configuration.logger_.severe("UniformCrossoverBinary.execute: the solutions "
                     + "are not of the right type. The type should be 'Binary', but "
                     + parents[0].getType() + " and "
                     + parents[1].getType() + " are obtained");
@@ -152,7 +136,7 @@ public class TwoPointsCrossoverBinary extends Crossover {
         crossoverProbability = (Double) getParameter("probability");
 
         if (parents.length < 2) {
-            Configuration.logger_.severe("TwoPointsCrossoverBinary.execute: operator needs two "
+            Configuration.logger_.severe("UniformCrossoverBinary.execute: operator needs two "
                     + "parents");
             Class cls = java.lang.String.class;
             String name = cls.getName();

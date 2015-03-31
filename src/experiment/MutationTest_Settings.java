@@ -48,7 +48,8 @@ public class MutationTest_Settings {
 
     public static final String[] CROSSOVER_OPERATORS = {
         //"SinglePointCrossover"
-        "TwoPointsCrossoverBinary"
+        //"TwoPointsCrossoverBinary"
+        "UniformCrossoverBinary"
     };
 
     public static final String[] MUTATION_OPERATORS = {

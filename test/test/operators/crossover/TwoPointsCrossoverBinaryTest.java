@@ -3,11 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package operators.crossover;
+package test.operators.crossover;
 
 import java.util.HashMap;
 import jmetal.core.Solution;
 import jmetal.encodings.variable.Binary;
+import operators.crossover.TwoPointsCrossoverBinary;
 import org.junit.Assert;
 import org.junit.Test;
 import problem.MutationTestProblem;
@@ -65,7 +66,7 @@ public class TwoPointsCrossoverBinaryTest {
         TwoPointsCrossoverBinary crossover = new TwoPointsCrossoverBinary(parameters);
 
         //test 1
-        offspring = crossover.createOffsprings(parent1, parent2, 7, 3, offspring);
+        crossover.createOffsprings(parent1, parent2, 7, 3, offspring);
 
         Assert.assertTrue(((Binary) offspring[0].getDecisionVariables()[0]).getIth(0));
         Assert.assertFalse(((Binary) offspring[0].getDecisionVariables()[0]).getIth(1));
@@ -90,7 +91,7 @@ public class TwoPointsCrossoverBinaryTest {
         //test 2
         offspring[0] = new Solution(parent1);
         offspring[1] = new Solution(parent2);
-        offspring = crossover.createOffsprings(parent1, parent2, 7, 1, offspring);
+        crossover.createOffsprings(parent1, parent2, 7, 1, offspring);
 
         Assert.assertTrue(((Binary) offspring[0].getDecisionVariables()[0]).getIth(0));
         Assert.assertFalse(((Binary) offspring[0].getDecisionVariables()[0]).getIth(1));

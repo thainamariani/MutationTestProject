@@ -3,10 +3,10 @@
 
 Number of Max Threads = 1
 Number of Running Threads = 0
-Number of Remaining Threads = 0
+Number of Remaining Threads = 1
 Number of Successfully Finished Threads = 0
 
-Active Threads = []
+Active Threads = [Thread[100_1000_0.95_0.1_UniformCrossoverBinary_BitFlipMutation_BinaryTournament_1,5,main]]
 
 Queued Threads = []
 

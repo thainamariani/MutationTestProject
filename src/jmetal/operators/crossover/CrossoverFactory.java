@@ -26,6 +26,7 @@ import jmetal.util.JMException;
 
 import java.util.HashMap;
 import operators.crossover.TwoPointsCrossoverBinary;
+import operators.crossover.UniformCrossoverBinary;
 
 /**
  * Class implementing a factory for crossover operators.
@@ -54,6 +55,8 @@ public class CrossoverFactory {
       return new BLXAlphaCrossover(parameters);
     else if (name.equalsIgnoreCase("TwoPointsCrossoverBinary"))
       return new TwoPointsCrossoverBinary(parameters);
+    else if (name.equalsIgnoreCase("UniformCrossoverBinary"))
+      return new UniformCrossoverBinary(parameters);
     else {
       Configuration.logger_.severe("CrossoverFactory.getCrossoverOperator. " +
           "Operator '" + name + "' not found ");
