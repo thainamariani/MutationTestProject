@@ -7,46 +7,48 @@ package experiment;
 
 /**
  * Class that contains the configuration of Mutation Test
+ *
  * @author Prado Lima
  */
 public class MutationTest_Settings {
 
     public static final String[] INSTANCES = {
-        "instances/bisect.txt"/*,    "instances/bub.txt",
-     "instances/find.txt",
-     "instances/fourballs.txt",
-     "instances/mid.txt",
-     "instances/trityp.txt"  */};
+        "instances/bisect.txt", //"instances/bub.txt",
+    //        "instances/find.txt",
+    //        "instances/fourballs.txt",
+    //        "instances/mid.txt",
+    //        "instances/trityp.txt"
+    };
 
     public static final MutationMetaheuristic[] ALGORITHMS = {
-        //MutationMetaheuristic.gGa,
-        //MutationMetaheuristic.ssGa,
-        MutationMetaheuristic.HillClimbingA
+        MutationMetaheuristic.gGa, //MutationMetaheuristic.ssGa,
+    //MutationMetaheuristic.HillClimbingA
     };
 
     public static final int[] POPULATION_SIZE = {
-        100,
-        200
+        100, //200
     };
 
     public static final int[] GENERATIONS = {
         1000/*,
-        10000,
-        100000*/
+     10000,
+     100000*/
+
     };
 
     public static final double[] CROSSOVER_PROBABILITY = {
-        0.8,
+        //0.8,
         0.95
     };
 
     public static final double[] MUTATION_PROBABILITY = {
-        0.005,
+        //0.005,
         0.1
     };
 
     public static final String[] CROSSOVER_OPERATORS = {
-        "SinglePointCrossover"
+        //"SinglePointCrossover"
+        "TwoPointsCrossoverBinary"
     };
 
     public static final String[] MUTATION_OPERATORS = {
@@ -58,14 +60,15 @@ public class MutationTest_Settings {
     };
 
     public static final int[] FITNESS_FUNCTIONS = {
-        1,
+        //1,
         2
     };
 
     // Hill Climbing
     public static final int[] IMPROVEMENT_ROUNDS = {
-        10,
-        100
+        10
+    //10,
+    //100
     };
 
     public static final int EXECUTIONS = 1;

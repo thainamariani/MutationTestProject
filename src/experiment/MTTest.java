@@ -1,14 +1,10 @@
 package experiment;
 
-import static experiment.MutationMetaheuristic.HillClimbingA;
 import java.util.HashMap;
 import jmetal.core.Algorithm;
 import jmetal.core.Operator;
 import jmetal.core.Problem;
 import jmetal.core.SolutionSet;
-import jmetal.metaheuristics.hillClimbing.HillClimbingA;
-import jmetal.metaheuristics.singleObjective.geneticAlgorithm.gGA;
-import jmetal.metaheuristics.singleObjective.geneticAlgorithm.ssGA;
 import jmetal.operators.crossover.CrossoverFactory;
 import jmetal.operators.mutation.MutationFactory;
 import jmetal.operators.selection.SelectionFactory;
@@ -26,6 +22,7 @@ import problem.MutationTestProblem;
  * @author thiagodnf
  */
 public class MTTest {
+
     public static void main(String[] args) throws JMException, ClassNotFoundException {
 
         MutationTest_Parameters mutationParameters = VerifyParameters(args);
@@ -52,7 +49,6 @@ public class MTTest {
         parameters = new HashMap();
         parameters.put("probability", mutationParameters.getCrossoverProbability());
         crossover = CrossoverFactory.getCrossoverOperator(mutationParameters.getCrossoverOperator(), parameters);
-
         parameters = new HashMap();
         parameters.put("probability", mutationParameters.getMutationProbability());
         mutation = MutationFactory.getMutationOperator(mutationParameters.getMutationOperator(), parameters);
@@ -77,10 +73,10 @@ public class MTTest {
             String path = String.format("experiment/%s/%s/F%s/%s", getInstanceName(mutationParameters.getInstance()), mutationParameters.getAlgo(), mutationParameters.getFitnessFunction(), mutationParameters.getContext());
             String pathFun = String.format("%s/FUN_%s", path, i);
             String pathVar = String.format("%s/VAR_%s", path, i);
-            
+
             System.out.println("Objectives values have been writen to file " + pathFun);
             population.printObjectivesToFile(pathFun);
-            
+
             System.out.println("Variables values have been writen to file " + pathVar);
             population.printVariablesToFile(pathVar);
         }
