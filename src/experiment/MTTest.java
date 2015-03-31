@@ -26,39 +26,22 @@ import problem.MutationTestProblem;
  * @author thiagodnf
  */
 public class MTTest {
-
-    public static String instance;
-    public static MutationMetaheuristic algo;
-    public static int populationSize;
-    public static int generations;
-    public static double crossoverProbability;
-    public static double mutationProbability;
-    public static String crossoverOperator;
-    public static String mutationOperator;
-    public static String selectionOperator;
-    public static int executions;
-    public static String context;
-    public static int fitnessFunction;
-    public static int improvementRounds;
-
     public static void main(String[] args) throws JMException, ClassNotFoundException {
 
-        //getLocalparameters();
-
-        verifyParameters(args);
+        MutationTest_Parameters mutationParameters = VerifyParameters(args);
         //experiments configurations
-        Problem problem = new MutationTestProblem(instance, fitnessFunction);
+        Problem problem = new MutationTestProblem(mutationParameters.getInstance(), mutationParameters.getFitnessFunction());
 
         //select algorithm
-        Algorithm algorithm = algorithmFactory(problem);
+        Algorithm algorithm = mutationParameters.getAlgorithmInstance(problem);
 
         //print parameters
-        printParameters(algorithm);
+        mutationParameters.PrintParameters();
 
         // Algorithm params
-        algorithm.setInputParameter("populationSize", populationSize);
-        algorithm.setInputParameter("maxEvaluations", populationSize * generations);
-        algorithm.setInputParameter("improvementRounds", improvementRounds);
+        algorithm.setInputParameter("populationSize", mutationParameters.getPopulationSize());
+        algorithm.setInputParameter("maxEvaluations", mutationParameters.getPopulationSize() * mutationParameters.getGenerations());
+        algorithm.setInputParameter("improvementRounds", mutationParameters.getImprovementRounds());
 
         Operator crossover;         // Crossover operator
         Operator mutation;         // Mutation operator
@@ -67,16 +50,16 @@ public class MTTest {
         HashMap parameters; // Operator parameters
         // Mutation and Crossover for Real codification
         parameters = new HashMap();
-        parameters.put("probability", crossoverProbability);
-        crossover = CrossoverFactory.getCrossoverOperator(crossoverOperator, parameters);
+        parameters.put("probability", mutationParameters.getCrossoverProbability());
+        crossover = CrossoverFactory.getCrossoverOperator(mutationParameters.getCrossoverOperator(), parameters);
 
         parameters = new HashMap();
-        parameters.put("probability", mutationProbability);
-        mutation = MutationFactory.getMutationOperator(mutationOperator, parameters);
+        parameters.put("probability", mutationParameters.getMutationProbability());
+        mutation = MutationFactory.getMutationOperator(mutationParameters.getMutationOperator(), parameters);
 
         /* Selection Operator */
         parameters = null;
-        selection = SelectionFactory.getSelectionOperator(selectionOperator, parameters);
+        selection = SelectionFactory.getSelectionOperator(mutationParameters.getSelectionOperator(), parameters);
 
         /* Add the operators to the algorithm*/
         algorithm.addOperator("crossover", crossover);
@@ -84,40 +67,26 @@ public class MTTest {
         algorithm.addOperator("selection", selection);
 
         /* Execute the Algorithm */
-        for (int i = 0; i < executions; i++) {
+        for (int i = 0; i < mutationParameters.getExecutions(); i++) {
             System.out.println("Run: " + i);
             long initTime = System.currentTimeMillis();
             SolutionSet population = algorithm.execute();
             long estimatedTime = System.currentTimeMillis() - initTime;
             System.out.println("Total time of execution: " + estimatedTime);
             /* Log messages */
-            String path = "experiment/" + getInstanceName(instance) + "/" + algo + "/F" + fitnessFunction + "/" + context;
-            System.out.println("Objectives values have been writen to file " + path + "/" + "FUN_" + i);
-            population.printObjectivesToFile(path + "/" + "FUN_" + i);
-            System.out.println("Variables values have been writen to file " + path + "/" + "FUN_" + i);
-            population.printVariablesToFile(path + "/" + "VAR_" + i);
+            String path = String.format("experiment/%s/%s/F%s/%s", getInstanceName(mutationParameters.getInstance()), mutationParameters.getAlgo(), mutationParameters.getFitnessFunction(), mutationParameters.getContext());
+            String pathFun = String.format("%s/FUN_%s", path, i);
+            String pathVar = String.format("%s/VAR_%s", path, i);
+            
+            System.out.println("Objectives values have been writen to file " + pathFun);
+            population.printObjectivesToFile(pathFun);
+            
+            System.out.println("Variables values have been writen to file " + pathVar);
+            population.printVariablesToFile(pathVar);
         }
-
     }
 
-    private static void getLocalparameters() {
-
-        instance = "instances/bisect.txt";
-        algo = MutationMetaheuristic.HillClimbingA;
-        populationSize = 1;
-        generations = 1;
-        crossoverProbability = 0.0;
-        mutationProbability = 0.0;
-        crossoverOperator = "SinglePointCrossover";
-        mutationOperator = "BitFlipMutation";
-        executions = 1;
-        context = "teste";
-        fitnessFunction = 1;
-        selectionOperator = "BinaryTournament";
-        improvementRounds = 10;
-    }
-
-    private static void verifyParameters(String[] args) {
+    private static MutationTest_Parameters VerifyParameters(String[] args) {
         // The parameters are optionals
         /*if (args.length < 10) {
          System.out.println("You need to inform the following parameters:");
@@ -137,20 +106,21 @@ public class MTTest {
          System.exit(0);
          }*/
 
+        MutationTest_Parameters mutationParameters = new MutationTest_Parameters();
         //instance
         if (args[0] != null && !args[0].trim().equals("")) {
-            instance = args[0];
+            mutationParameters.setInstance(args[0]);
         }
 
         //algorithm
         if (args[1] != null && !args[1].trim().equals("")) {
-            algo = MutationMetaheuristic.valueOf(args[1]);
+            mutationParameters.setAlgo(MutationMetaheuristic.valueOf(args[1]));
         }
 
         //populationSize
         if (args[2] != null && !args[2].trim().equals("")) {
             try {
-                populationSize = Integer.valueOf(args[2]);
+                mutationParameters.setPopulationSize(Integer.valueOf(args[2]));
             } catch (NumberFormatException ex) {
                 System.out.println("Population size argument not integer.");
                 System.exit(1);
@@ -160,7 +130,7 @@ public class MTTest {
         //generations
         if (args[3] != null && !args[3].trim().equals("")) {
             try {
-                generations = Integer.valueOf(args[3]);
+                mutationParameters.setGenerations(Integer.valueOf(args[3]));
             } catch (NumberFormatException ex) {
                 System.out.println("Generations argument not integer.");
                 System.exit(1);
@@ -168,10 +138,10 @@ public class MTTest {
         }
 
         //crossoverProbability
-        crossoverProbability = 0.0;
+        mutationParameters.setCrossoverProbability(0.0);
         if (args[4] != null && !args[4].trim().equals("")) {
             try {
-                crossoverProbability = Double.valueOf(args[4]);
+                mutationParameters.setCrossoverProbability(Double.valueOf(args[4]));
             } catch (NumberFormatException ex) {
                 System.out.println("Crossover probability argument not double.");
                 System.exit(1);
@@ -179,11 +149,11 @@ public class MTTest {
         }
 
         //mutationProbability
-        mutationProbability = 0.0;
+        mutationParameters.setMutationProbability(0.0);
 
         if (args[5] != null && !args[5].trim().equals("")) {
             try {
-                mutationProbability = Double.valueOf(args[5]);
+                mutationParameters.setMutationProbability(Double.valueOf(args[5]));
             } catch (NumberFormatException ex) {
                 System.out.println("Mutation probability argument not double.");
                 System.exit(1);
@@ -192,18 +162,18 @@ public class MTTest {
 
         //crossoverOperator
         if (args[6] != null && !args[6].trim().equals("")) {
-            crossoverOperator = args[6];
+            mutationParameters.setCrossoverOperator(args[6]);
         }
 
         //mutationOperator
         if (args[7] != null && !args[7].trim().equals("")) {
-            mutationOperator = args[7];
+            mutationParameters.setMutationOperator(args[7]);
         }
 
         //executions
         if (args[8] != null && !args[8].trim().equals("")) {
             try {
-                executions = Integer.valueOf(args[8]);
+                mutationParameters.setExecutions(Integer.valueOf(args[8]));
             } catch (NumberFormatException ex) {
                 System.out.println("Executions argument not double.");
                 System.exit(1);
@@ -212,13 +182,13 @@ public class MTTest {
 
         //context
         if (args[9] != null && !args[9].trim().equals("")) {
-            context = args[9];
+            mutationParameters.setContext(args[9]);
         }
 
         //fitness function
         if (args[10] != null && !args[10].trim().equals("")) {
             try {
-                fitnessFunction = Integer.valueOf(args[10]);
+                mutationParameters.setFitnessFunction(Integer.valueOf(args[10]));
             } catch (NumberFormatException ex) {
                 System.out.println("Fitness Function argument not integer.");
                 System.exit(1);
@@ -227,45 +197,15 @@ public class MTTest {
 
         //selection operator
         if (args[11] != null && !args[11].trim().equals("")) {
-            selectionOperator = args[11];
+            mutationParameters.setSelectionOperator(args[11]);
         }
 
         //improvement rounds
         if (args[12] != null && !args[12].trim().equals("")) {
-            improvementRounds = Integer.valueOf(args[12]);
+            mutationParameters.setImprovementRounds(Integer.valueOf(args[12]));
         }
 
-    }
-
-    private static void printParameters(Algorithm algorithm) {
-        System.out.println("Parameters Information");
-        System.out.println("----------------------------------------------------");
-        System.out.println("Instance: " + instance);
-        System.out.println("Algorithm: " + algorithm.toString());
-        System.out.println("Fitness Function: F" + fitnessFunction);
-        System.out.println("Population: " + populationSize);
-        System.out.println("maxEvaluations: " + populationSize * generations);
-        System.out.println("crossoverProbability: " + crossoverProbability);
-        System.out.println("mutationsProbability; " + mutationProbability);
-        System.out.println("crossoverOperator: " + crossoverOperator);
-        System.out.println("mutationOperator: " + mutationOperator);
-        System.out.println("selectionOperator: " + selectionOperator);
-        System.out.println("executions: " + executions);
-        System.out.println("improvementRounds: " + improvementRounds);
-        System.out.println("----------------------------------------------------");
-    }
-
-    private static Algorithm algorithmFactory(Problem problem) {
-        switch (algo) {
-            case gGa:
-                return new gGA(problem);
-            case ssGa:
-                return new ssGA(problem);
-            case HillClimbingA:
-                return new HillClimbingA(problem);
-            default:
-                throw new AssertionError();
-        }
+        return mutationParameters;
     }
 
     public static String getInstanceName(String path) {

@@ -24,66 +24,26 @@ public class MutationTest_Multithread {
     private static volatile Thread console;
     private static volatile String consoleToken = ">";
 
-    private static final String[] INSTANCES = {
-        "instances/bisect.txt",
-        "instances/bub.txt"/*,
-        "instances/find.txt",
-        "instances/fourballs.txt",
-        "instances/mid.txt",
-        "instances/trityp.txt"  */
-    };
+    public static void main(String[] args) throws InterruptedException {
+        initialize();
 
-    private static final MutationMetaheuristic[] ALGORITHMS = {
-        //MutationMetaheuristic.gGa,
-        //MutationMetaheuristic.ssGa,
-        MutationMetaheuristic.HillClimbingA
-    };
-
-    private static final int[] POPULATION_SIZE = {
-        100,
-        200
-    };
-
-    private static final int[] GENERATIONS = {
-        1000,
-        10000,
-        100000
-    };
-
-    private static final double[] CROSSOVER_PROBABILITY = {
-        0.8,
-        0.95
-    };
-
-    private static final double[] MUTATION_PROBABILITY = {
-        0.005,
-        0.1
-    };
-
-    private static final String[] CROSSOVER_OPERATORS = {
-        "SinglePointCrossover"
-    };
-
-    private static final String[] MUTATION_OPERATORS = {
-        "BitFlipMutation"
-    };
-
-    private static final String[] SELECTION_OPERATORS = {
-        "BinaryTournament"
-    };
-
-    private static final int[] FITNESS_FUNCTIONS = {
-        1,
-        2
-    };
-
-    // Hill Climbing
-    private static final int[] IMPROVEMENT_ROUNDS = {
-        500,
-        1000
-    };
-
-    private static final int EXECUTIONS = 1;
+        while (!ACTIVE_THREADS.isEmpty() || !QUEUED_THREADS.isEmpty()) {
+            if (!QUEUED_THREADS.isEmpty()) {
+                Thread thread = QUEUED_THREADS.get(0);
+                while (RUNNING_THREADS >= MAX_THREADS) {
+                    Thread.sleep(1000);
+                }
+                QUEUED_THREADS.remove(0);
+                incrementRunningThreads();
+                addThread(thread);
+                thread.start();
+            } else {
+                Thread.sleep(1000);
+            }
+        }
+        System.out.println("End of execution!");
+        System.exit(0);
+    }
 
     private static synchronized void initialize() {
         ACTIVE_THREADS = new ArrayList<>();
@@ -131,18 +91,18 @@ public class MutationTest_Multithread {
                 createThread(context);
             }
         } catch (Exception ex) {
-            for (final String instance : INSTANCES) {
-                for (final MutationMetaheuristic algorithm : ALGORITHMS) {
-                    for (final int fitnessFunction : FITNESS_FUNCTIONS) {
-                        for (final int populationSize : POPULATION_SIZE) {
-                            for (final int generations : GENERATIONS) {
-                                for (final double crossoverProbability : CROSSOVER_PROBABILITY) {
-                                    for (final double mutationProbability : MUTATION_PROBABILITY) {
-                                        for (final String crossoverOperator : CROSSOVER_OPERATORS) {
-                                            for (final String mutationOperator : MUTATION_OPERATORS) {
-                                                for (final String selectionOperator : SELECTION_OPERATORS) {
-                                                    for (final int improvementRounds : IMPROVEMENT_ROUNDS) {
-                                                        createThread(instance, algorithm, populationSize, generations, crossoverProbability, mutationProbability, crossoverOperator, mutationOperator, EXECUTIONS, fitnessFunction, selectionOperator, improvementRounds);
+            for (final String instance : MutationTest_Settings.INSTANCES) {
+                for (final MutationMetaheuristic algorithm : MutationTest_Settings.ALGORITHMS) {
+                    for (final int fitnessFunction : MutationTest_Settings.FITNESS_FUNCTIONS) {
+                        for (final int populationSize : MutationTest_Settings.POPULATION_SIZE) {
+                            for (final int generations : MutationTest_Settings.GENERATIONS) {
+                                for (final double crossoverProbability : MutationTest_Settings.CROSSOVER_PROBABILITY) {
+                                    for (final double mutationProbability : MutationTest_Settings.MUTATION_PROBABILITY) {
+                                        for (final String crossoverOperator : MutationTest_Settings.CROSSOVER_OPERATORS) {
+                                            for (final String mutationOperator : MutationTest_Settings.MUTATION_OPERATORS) {
+                                                for (final String selectionOperator : MutationTest_Settings.SELECTION_OPERATORS) {
+                                                    for (final int improvementRounds : MutationTest_Settings.IMPROVEMENT_ROUNDS) {
+                                                        createThread(instance, algorithm, populationSize, generations, crossoverProbability, mutationProbability, crossoverOperator, mutationOperator, MutationTest_Settings.EXECUTIONS, fitnessFunction, selectionOperator, improvementRounds);
                                                     }
                                                 }
                                             }
@@ -300,18 +260,13 @@ public class MutationTest_Multithread {
                     }
                 }
             }
-
         });
         System.out.println("Console started. You can now type your commands:");
         console.start();
     }
 
-    private static synchronized void printConsoleToken() {
-        System.out.print(consoleToken + " ");
-    }
-
     private static synchronized void createThread(final String context) {
-        //instance_algorithms_populationSize_generations_crossoverProbability_mutationProbability_crossoverOperator_mutationOperator_executions
+        //instance_algorithms_populationSize_generations_crossoverProbability_mutationProbability_crossoverOperator_mutationOperator_executions_fitnessFunction_improvementRounds
         String[] split = context.split("_");
         final String instance = String.valueOf(split[1]);
         final MutationMetaheuristic algorithm = MutationMetaheuristic.valueOf(split[2]);
@@ -329,14 +284,8 @@ public class MutationTest_Multithread {
     }
 
     private static synchronized void createThread(final String instance, final MutationMetaheuristic algorithm, final int populationSize, final int generations, final double crossoverProbability, final double mutationProbability, final String crossoverOperator, final String mutationOperator, final int executions, final int fitnessFunction, final String selectionOperator, final int improvementRounds) {
-        final String context = getContext(algorithm, populationSize, generations, crossoverProbability, mutationProbability, crossoverOperator, mutationOperator, executions, selectionOperator, improvementRounds);
-        //String.valueOf(maxEvaluations)
-        //String.valueOf(mutationProbability), style
-        //);
-        createThread(instance, algorithm, populationSize, generations, crossoverProbability, mutationProbability, crossoverOperator, mutationOperator, executions, fitnessFunction, context, selectionOperator, improvementRounds);
-    }
-
-    private static synchronized void createThread(final String instance, final MutationMetaheuristic algorithm, final int populationSize, final int generations, final double crossoverProbability, final double mutationProbability, final String crossoverOperator, final String mutationOperator, final int executions, final int fitnessFunction, final String context, final String selectionOperator, final int improvementRounds) {
+        final String context = MutationTest_Parameters.generateAlgorithmId(algorithm, populationSize, generations, crossoverProbability, mutationProbability, crossoverOperator, mutationOperator, executions, selectionOperator, improvementRounds);
+         
         final Thread thread = new Thread(new Runnable() {
 
             private Process process = null;
@@ -344,9 +293,14 @@ public class MutationTest_Multithread {
             @Override
             public void run() {
                 try {
-                    ProcessBuilder builder = new ProcessBuilder("java", "-XX:MaxPermSize=1G", "-Xmx5G", "-classpath", "dist/MutationTestProject.jar", "experiment.MTTest",
+                    ProcessBuilder builder = new ProcessBuilder("java",
+                            "-XX:MaxPermSize=1G",
+                            "-Xmx5G",
+                            "-classpath",
+                            "dist/MutationTestProject.jar",
+                            "experiment.MTTest",
                             "" + instance,
-                            "" + algorithm.toString(),
+                            "" + algorithm,
                             "" + populationSize,
                             "" + generations,
                             "" + crossoverProbability,
@@ -359,8 +313,12 @@ public class MutationTest_Multithread {
                             "" + selectionOperator,
                             "" + improvementRounds
                     );
-                    final File destination = new File("experiment/" + getInstanceName(instance) + "/" + algorithm + "/F" + fitnessFunction + "/" + context + "/SYSTEM_OUTPUT.txt");
-                    final File errorDestination = new File("experiment/" + getInstanceName(instance) + "/" + algorithm + "/F" + fitnessFunction + "/" + context + "/SYSTEM_ERROR.txt");
+
+                    String pathFile = String.format("experiment/%s/%s/F%s/%s", getInstanceName(instance), algorithm, fitnessFunction, context);
+
+                    final File destination = new File(String.format("%s/SYSTEM_OUTPUT.txt", pathFile));
+                    final File errorDestination = new File(String.format("%s/SYSTEM_ERROR.txt", pathFile));
+                    
                     {
                         final File parentFile = destination.getParentFile();
                         if (!parentFile.exists()) {
@@ -372,6 +330,7 @@ public class MutationTest_Multithread {
                     errorDestination.createNewFile();
                     builder.redirectError(errorDestination);
                     process = builder.start();
+
                     int exitStatus = process.waitFor();
                     if (exitStatus != 0) {
                         threadError(this, context, exitStatus);
@@ -386,6 +345,7 @@ public class MutationTest_Multithread {
                     if (process != null) {
                         process.destroy();
                     }
+
                     removeThread(context);
                     decrementRunningThreads();
                 }
@@ -394,6 +354,16 @@ public class MutationTest_Multithread {
         addThreadToQueue(thread);
     }
 
+    public static String getInstanceName(String path) {
+        int end = path.indexOf(".txt");
+        return path.substring(10, end);
+    }
+
+    private static synchronized void printConsoleToken() {
+        System.out.print(consoleToken + " ");
+    }
+
+    //<editor-fold defaultstate="collapsed" desc="Methods to Manipulate Threads">
     public static synchronized void decrementRunningThreads() {
         RUNNING_THREADS--;
     }
@@ -436,7 +406,7 @@ public class MutationTest_Multithread {
     }
 
     private static synchronized void threadError(Runnable runnable, String name, int exitStatus) {
-        System.err.println("Thread " + name + " stopped with error.\nIt has been added at the end of the queue.\nExit status: " + exitStatus + "\n");
+        System.err.println(String.format("Thread %s stopped with error.\nIt has been added at the end of the queue.\nExit status: %s\n", name, exitStatus));
         printConsoleToken();
         addThreadToQueue(new Thread(runnable, name));
     }
@@ -468,40 +438,5 @@ public class MutationTest_Multithread {
     private static synchronized List<String> getFinishedThreads() {
         return new ArrayList<>(FINISHED_THREADS);
     }
-
-    public static synchronized String getContext(final MutationMetaheuristic algorithm, final int populationSize, final int generations, final double crossoverProbability, final double mutationProbability, final String crossoverOperator, final String mutationOperator, final int executions, final String selectionOperator, final int improvementRounds) {
-        switch (algorithm) {
-            case HillClimbingA:
-                return String.format("%s_%s_%s", improvementRounds, mutationOperator, executions);
-            default:
-                return populationSize + "_" + generations + "_" + crossoverProbability + "_" + mutationProbability + "_" + crossoverOperator + "_" + mutationOperator + "_" + selectionOperator + "_" + executions;
-        }
-    }
-
-    public static void main(String[] args) throws InterruptedException {
-        initialize();
-
-        while (!ACTIVE_THREADS.isEmpty() || !QUEUED_THREADS.isEmpty()) {
-            if (!QUEUED_THREADS.isEmpty()) {
-                Thread thread = QUEUED_THREADS.get(0);
-                while (RUNNING_THREADS >= MAX_THREADS) {
-                    Thread.sleep(1000);
-                }
-                QUEUED_THREADS.remove(0);
-                incrementRunningThreads();
-                addThread(thread);
-                thread.start();
-            } else {
-                Thread.sleep(1000);
-            }
-        }
-        System.out.println("FIM de execução!");
-        System.exit(0);
-    }
-
-    public static String getInstanceName(String path) {
-        int end = path.indexOf(".txt");
-        return path.substring(10, end);
-    }
-
+//</editor-fold>
 }
