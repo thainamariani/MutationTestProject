@@ -53,7 +53,8 @@ public class MutationTest_Settings {
     };
 
     public static final String[] MUTATION_OPERATORS = {
-        "BitFlipMutation"
+        //"BitFlipMutation"
+        "SwapMutationBinary"
     };
 
     public static final String[] SELECTION_OPERATORS = {
@@ -72,5 +73,5 @@ public class MutationTest_Settings {
     //100
     };
 
-    public static final int EXECUTIONS = 1;
+    public static final int EXECUTIONS = 10;
 }

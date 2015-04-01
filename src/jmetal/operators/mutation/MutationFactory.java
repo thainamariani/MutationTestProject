@@ -25,6 +25,7 @@ import jmetal.util.Configuration;
 import jmetal.util.JMException;
 
 import java.util.HashMap;
+import operators.mutation.SwapMutationBinary;
 
 /**
  * Class implementing a factory for Mutation objects.
@@ -47,6 +48,8 @@ public class MutationFactory {
       return new NonUniformMutation(parameters);
     else if (name.equalsIgnoreCase("SwapMutation"))
       return new SwapMutation(parameters);
+    else if (name.equalsIgnoreCase("SwapMutationBinary"))
+      return new SwapMutationBinary(parameters);
     else
     {
       Configuration.logger_.severe("Operator '" + name + "' not found ");
