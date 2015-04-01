@@ -88,8 +88,8 @@ public class HillClimbingA extends Algorithm {
             mutationOperator.execute(mutatedSolution);
             problem_.evaluate(mutatedSolution); // Executing evalute method to get "fitness" after
 
-            // This is: Mutated is best
-            if (solution.getObjective(0) > mutatedSolution.getObjective(0)) {
+            // This is: Mutated is best (Minimize)
+            if (mutatedSolution.getObjective(0) < solution.getObjective(0)) {
                 solution = mutatedSolution;
             }
         }
