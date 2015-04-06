@@ -58,7 +58,8 @@ public class MutationTest_Settings {
     };
 
     public static final String[] SELECTION_OPERATORS = {
-        "BinaryTournament"
+        //"BinaryTournament",
+        "RouletteWheel"
     };
 
     public static final int[] FITNESS_FUNCTIONS = {
@@ -73,5 +74,5 @@ public class MutationTest_Settings {
     //100
     };
 
-    public static final int EXECUTIONS = 10;
+    public static final int EXECUTIONS = 1;
 }

@@ -78,7 +78,7 @@ public class SwapMutationBinary extends Mutation {
 
             }
         } else {
-            Configuration.logger_.severe("SwapMutation.doMutation: invalid type. "
+            Configuration.logger_.severe("SwapMutationBinary.doMutation: invalid type. "
                     + "" + solution.getDecisionVariables()[0].getVariableType());
 
             Class cls = java.lang.String.class;

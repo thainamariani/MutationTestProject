@@ -25,6 +25,7 @@ import jmetal.util.Configuration;
 import jmetal.util.JMException;
 
 import java.util.HashMap;
+import operators.selection.RouletteWheel;
 
 /**
  * Class implementing a factory of selection operators
@@ -50,6 +51,10 @@ public class SelectionFactory {
       return new RankingAndCrowdingSelection(parameters);
     else if (name.equalsIgnoreCase("DifferentialEvolutionSelection"))
       return new DifferentialEvolutionSelection(parameters);
+    else if (name.equalsIgnoreCase("RouletteWheel"))
+      return new RouletteWheel(parameters);
+    
+    
 //    else if (name.equalsIgnoreCase("MatingSelection"))
 //        return new MatingSelection(parameters);
 //    else if (name.equalsIgnoreCase("EnviromentalSelection"))
