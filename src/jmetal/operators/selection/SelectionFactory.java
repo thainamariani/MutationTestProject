@@ -25,6 +25,7 @@ import jmetal.util.Configuration;
 import jmetal.util.JMException;
 
 import java.util.HashMap;
+import operators.selection.LinearRanking;
 import operators.selection.RouletteWheel;
 
 /**
@@ -52,6 +53,8 @@ public class SelectionFactory {
     else if (name.equalsIgnoreCase("DifferentialEvolutionSelection"))
       return new DifferentialEvolutionSelection(parameters);
     else if (name.equalsIgnoreCase("RouletteWheel"))
+      return new LinearRanking(parameters);
+    else if (name.equalsIgnoreCase("LinearRanking"))
       return new RouletteWheel(parameters);
     
     

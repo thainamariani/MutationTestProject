@@ -65,7 +65,7 @@ public class RankingAndCrowdingSelection extends Selection {
     super(parameters) ;
 
   	if (parameters.get("problem") != null)
-  		problem_ = (Problem) parameters.get("problem") ;  		
+  		problem_ = (Problem) parameters.get("probelem") ;  		
 
     if (problem_ == null) {
       Configuration.logger_.severe("RankingAndCrowdingSelection.execute: " +

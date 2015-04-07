@@ -59,7 +59,8 @@ public class MutationTest_Settings {
 
     public static final String[] SELECTION_OPERATORS = {
         //"BinaryTournament",
-        "RouletteWheel"
+        //"RouletteWheel"
+        "LinearRanking"
     };
 
     public static final int[] FITNESS_FUNCTIONS = {
