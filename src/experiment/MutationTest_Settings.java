@@ -13,7 +13,8 @@ package experiment;
 public class MutationTest_Settings {
 
     public static final String[] INSTANCES = {
-        "instances/bisect.txt", //"instances/bub.txt",
+    //    "instances/bisect.txt",
+    "instances/bub.txt",
     //        "instances/find.txt",
     //        "instances/fourballs.txt",
     //        "instances/mid.txt",
@@ -30,7 +31,7 @@ public class MutationTest_Settings {
     };
 
     public static final int[] GENERATIONS = {
-        1000/*,
+        100/*,
      10000,
      100000*/
 
@@ -75,5 +76,5 @@ public class MutationTest_Settings {
     //100
     };
 
-    public static final int EXECUTIONS = 1;
+    public static final int EXECUTIONS = 10;
 }
