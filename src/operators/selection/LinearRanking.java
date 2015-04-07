@@ -63,6 +63,7 @@ public class LinearRanking extends Selection {
 
     //formulation of linear ranking
     public List<Double> calculateProbability(SolutionSet population) {
+        probabilitySum = 0;
         //s = selection pressure
         double s = 1.5;
         double value1 = (2 - s) / population.size();

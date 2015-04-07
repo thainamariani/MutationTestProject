@@ -53,9 +53,9 @@ public class SelectionFactory {
     else if (name.equalsIgnoreCase("DifferentialEvolutionSelection"))
       return new DifferentialEvolutionSelection(parameters);
     else if (name.equalsIgnoreCase("RouletteWheel"))
-      return new LinearRanking(parameters);
-    else if (name.equalsIgnoreCase("LinearRanking"))
       return new RouletteWheel(parameters);
+    else if (name.equalsIgnoreCase("LinearRanking"))
+      return new LinearRanking(parameters);
     
     
 //    else if (name.equalsIgnoreCase("MatingSelection"))

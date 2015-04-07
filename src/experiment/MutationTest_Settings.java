@@ -13,12 +13,12 @@ package experiment;
 public class MutationTest_Settings {
 
     public static final String[] INSTANCES = {
-    //    "instances/bisect.txt",
-    "instances/bub.txt",
-    //        "instances/find.txt",
-    //        "instances/fourballs.txt",
-    //        "instances/mid.txt",
-    //        "instances/trityp.txt"
+        "instances/bisect.txt",
+        "instances/bub.txt",
+        "instances/find.txt",
+        "instances/fourballs.txt",
+        "instances/mid.txt",
+        "instances/trityp.txt"
     };
 
     public static final MutationMetaheuristic[] ALGORITHMS = {
@@ -27,40 +27,41 @@ public class MutationTest_Settings {
     };
 
     public static final int[] POPULATION_SIZE = {
-        100, //200
+        50,
+        100,
+        200
     };
 
     public static final int[] GENERATIONS = {
-        100/*,
-     10000,
-     100000*/
-
+        100,
+        1000,
+        10000
     };
 
     public static final double[] CROSSOVER_PROBABILITY = {
-        //0.8,
-        0.95
+        0.8,
+        0.9
     };
 
     public static final double[] MUTATION_PROBABILITY = {
-        //0.005,
+        0.05,
         0.1
     };
 
     public static final String[] CROSSOVER_OPERATORS = {
-        //"SinglePointCrossover"
-        //"TwoPointsCrossoverBinary"
+        "SinglePointCrossover",
+        "TwoPointsCrossoverBinary",
         "UniformCrossoverBinary"
     };
 
     public static final String[] MUTATION_OPERATORS = {
-        //"BitFlipMutation"
+        "BitFlipMutation",
         "SwapMutationBinary"
     };
 
     public static final String[] SELECTION_OPERATORS = {
         //"BinaryTournament",
-        //"RouletteWheel"
+        //"RouletteWheel",
         "LinearRanking"
     };
 
@@ -71,7 +72,7 @@ public class MutationTest_Settings {
 
     // Hill Climbing
     public static final int[] IMPROVEMENT_ROUNDS = {
-        10
+    10
     //10,
     //100
     };

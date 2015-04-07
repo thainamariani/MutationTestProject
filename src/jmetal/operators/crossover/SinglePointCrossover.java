@@ -176,6 +176,7 @@ public class SinglePointCrossover extends Crossover {
   public Object execute(Object object) throws JMException {
     Solution[] parents = (Solution[]) object;
 
+    
     if (!(VALID_TYPES.contains(parents[0].getType().getClass())  &&
         VALID_TYPES.contains(parents[1].getType().getClass())) ) {
 
