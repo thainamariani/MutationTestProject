@@ -10,6 +10,7 @@ import jmetal.operators.mutation.MutationFactory;
 import jmetal.operators.selection.SelectionFactory;
 import jmetal.util.JMException;
 import problem.MutationTestProblem;
+import results.Results;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -39,6 +40,7 @@ public class MTTest {
         algorithm.setInputParameter("populationSize", mutationParameters.getPopulationSize());
         algorithm.setInputParameter("maxEvaluations", mutationParameters.getPopulationSize() * mutationParameters.getGenerations());
         algorithm.setInputParameter("improvementRounds", mutationParameters.getImprovementRounds());
+        algorithm.setInputParameter("tweaks", mutationParameters.getTweaks());
 
         Operator crossover;         // Crossover operator
         Operator mutation;         // Mutation operator
@@ -62,6 +64,7 @@ public class MTTest {
         algorithm.addOperator("mutation", mutation);
         algorithm.addOperator("selection", selection);
 
+        String path = "";
         /* Execute the Algorithm */
         for (int i = 0; i < mutationParameters.getExecutions(); i++) {
             System.out.println("Run: " + i);
@@ -70,7 +73,7 @@ public class MTTest {
             long estimatedTime = System.currentTimeMillis() - initTime;
             System.out.println("Total time of execution: " + estimatedTime);
             /* Log messages */
-            String path = String.format("experiment/%s/%s/F%s/%s", getInstanceName(mutationParameters.getInstance()), mutationParameters.getAlgo(), mutationParameters.getFitnessFunction(), mutationParameters.getContext());
+            path = String.format("experiment/%s/%s/F%s/%s", getInstanceName(mutationParameters.getInstance()), mutationParameters.getAlgo(), mutationParameters.getFitnessFunction(), mutationParameters.getContext());
             String pathFun = String.format("%s/FUN_%s", path, i);
             String pathVar = String.format("%s/VAR_%s", path, i);
 
@@ -80,6 +83,7 @@ public class MTTest {
             System.out.println("Variables values have been writen to file " + pathVar);
             population.printVariablesToFile(pathVar);
         }
+
     }
 
     private static MutationTest_Parameters VerifyParameters(String[] args) {
@@ -201,6 +205,10 @@ public class MTTest {
             mutationParameters.setImprovementRounds(Integer.valueOf(args[12]));
         }
 
+        //tweaks
+        if (args[13] != null && !args[13].trim().equals("")) {
+            mutationParameters.setTweaks(Integer.valueOf(args[13]));
+        }
         return mutationParameters;
     }
 

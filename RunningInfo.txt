@@ -3,11 +3,11 @@
 
 Number of Max Threads = 1
 Number of Running Threads = 1
-Number of Remaining Threads = 2
+Number of Remaining Threads = 5
 Number of Successfully Finished Threads = 0
 
-Active Threads = [Thread[10_SwapMutationBinary_1,5,main]]
+Active Threads = [Thread[10_BitFlipMutation_10,5,main]]
 
-Queued Threads = [Thread[10_SwapMutationBinary_1_10,5,main], Thread[10_SwapMutationBinary_1_10,5,main]]
+Queued Threads = [Thread[10_BitFlipMutation_10,5,main], Thread[10_BitFlipMutation_10,5,main], Thread[10_BitFlipMutation_10,5,main], Thread[10_BitFlipMutation_10,5,main], Thread[10_BitFlipMutation_10,5,main]]
 
-Finished Threads = [100_100_0.8_0.05_SinglePointCrossover_BitFlipMutation_LinearRanking_10, 100_1000_0.8_0.05_SinglePointCrossover_BitFlipMutation_LinearRanking_10]
+Finished Threads = []

@@ -314,7 +314,8 @@ public class MutationTest_Multithread {
                             "" + context,
                             "" + fitnessFunction,
                             "" + selectionOperator,
-                            "" + improvementRounds
+                            "" + improvementRounds,
+                            "" + tweaks
                     );
 
                     String pathFile = String.format("experiment/%s/%s/F%s/%s", getInstanceName(instance), algorithm, fitnessFunction, context);
