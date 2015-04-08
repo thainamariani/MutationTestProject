@@ -15,10 +15,10 @@ public class MutationTest_Settings {
     public static final String[] INSTANCES = {
         "instances/bisect.txt",
         "instances/bub.txt",
-        "instances/find.txt",
-        "instances/fourballs.txt",
-        "instances/mid.txt",
-        "instances/trityp.txt"
+        //"instances/find.txt",
+        //"instances/fourballs.txt",
+        //"instances/mid.txt",
+        //"instances/trityp.txt"
     };
 
     public static final MutationMetaheuristic[] ALGORITHMS = {
@@ -27,9 +27,9 @@ public class MutationTest_Settings {
     };
 
     public static final int[] POPULATION_SIZE = {
-        50,
+        //50,
         100,
-        200
+        //200
     };
 
     public static final int[] GENERATIONS = {
@@ -40,23 +40,23 @@ public class MutationTest_Settings {
 
     public static final double[] CROSSOVER_PROBABILITY = {
         0.8,
-        0.9
+        //0.9
     };
 
     public static final double[] MUTATION_PROBABILITY = {
         0.05,
-        0.1
+        //0.1
     };
 
     public static final String[] CROSSOVER_OPERATORS = {
         "SinglePointCrossover",
-        "TwoPointsCrossoverBinary",
-        "UniformCrossoverBinary"
+        //"TwoPointsCrossoverBinary",
+        //"UniformCrossoverBinary"
     };
 
     public static final String[] MUTATION_OPERATORS = {
         "BitFlipMutation",
-        "SwapMutationBinary"
+        //"SwapMutationBinary"
     };
 
     public static final String[] SELECTION_OPERATORS = {

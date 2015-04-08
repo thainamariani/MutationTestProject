@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
+import util.InstanceReader;
 
 /**
  *
@@ -30,7 +31,7 @@ public class Results {
     public static void main(String[] args) throws IOException, FileNotFoundException, InterruptedException {
         List<Path> paths = getPaths();
         for (Path path : paths) {
-            //getResults(path);
+            getResults(path);
         }
         selectPathsToKruskal(paths);
     }
@@ -89,7 +90,7 @@ public class Results {
                         bw.newLine();
                         bw.write(directories.get(j).toString());
                         bw.newLine();
-                        bw.write("Differents? " + difference);
+                        bw.write("Different? " + difference);
                         bw.newLine();
                         bw.newLine();
                         bw.write("------------------------------------------------------");
@@ -151,6 +152,7 @@ public class Results {
                         allFuns.add(fun);
                     }
                 }
+
             }
 
             double sum = 0;
@@ -167,19 +169,39 @@ public class Results {
 
             double average = sum / allFuns.size();
 
+            BufferedReader brVar = new BufferedReader(new FileReader(path + "/VAR_" + bestPosition));
+            String sCurrentLine;
+            String var = "";
+            while ((sCurrentLine = brVar.readLine()) != null) {
+                if (!"".equals(sCurrentLine)) {
+                    var = sCurrentLine;
+                }
+            }
+
+            //calculate dead mutants
+            int varDeadMutants = getNumberOfDifferentKilledMutants(var, path);
+            int varTestCases = getNumberOfTestCases(var);
+
             //write results
             File writtenFile = new File(path + "/RESULTS");
             if (!writtenFile.exists()) {
                 writtenFile.createNewFile();
-                FileWriter fw = new FileWriter(writtenFile.getAbsoluteFile());
-                BufferedWriter bw = new BufferedWriter(fw);
-                bw.write("Average: " + average);
-                bw.newLine();
-                bw.write("Standard Deviation: " + getStandardDeviation(allFuns));
-                bw.newLine();
-                bw.write("Best Fitness (FUN_" + bestPosition + "): " + best);
-                bw.close();
             }
+
+            FileWriter fw = new FileWriter(writtenFile.getAbsoluteFile());
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write("Average: " + average);
+            bw.newLine();
+            bw.write("Standard Deviation: " + getStandardDeviation(allFuns));
+            bw.newLine();
+            bw.write("Best Fitness (FUN_" + bestPosition + "): " + best);
+            bw.newLine();
+            bw.write("VAR_" + bestPosition + ": " + var);
+            bw.newLine();
+            bw.write("Number of Test Cases: " + varTestCases);
+            bw.newLine();
+            bw.write("Number of Dead Mutants: " + varDeadMutants);
+            bw.close();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -196,4 +218,42 @@ public class Results {
         StandardDeviation sd = new StandardDeviation();
         return sd.evaluate(funArray);
     }
+
+    public static int getNumberOfTestCases(String solution) {
+        int count = 0;
+        for (int i = 0; i < solution.length(); i++) {
+            if (solution.charAt(i) == '1') {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public static int getNumberOfDifferentKilledMutants(String solution, Path path) {
+        Path instanceDirectory = path.getParent().getParent().getParent();
+        String instanceName = instanceDirectory.getFileName().toString();
+        InstanceReader reader = new InstanceReader("instances/" + instanceName + ".txt");
+
+        reader.open();
+        int numberOfTestSuite = reader.readInt();
+        int numberOfMutants = reader.readInt();
+        int[][] coverage = reader.readIntMatrix(numberOfMutants, numberOfTestSuite, " ");
+        reader.close();
+
+        int[] visited = new int[numberOfMutants];
+        int total = 0;
+
+        for (int i = 0; i < solution.length(); i++) {
+            if (solution.charAt(i) == '1') {
+                for (int j = 0; j < numberOfMutants; j++) {
+                    if (coverage[j][i] == 1 && visited[j] == 0) {
+                        visited[j] = 1;
+                        total++;
+                    }
+                }
+            }
+        }
+        return total;
+    }
+
 }
