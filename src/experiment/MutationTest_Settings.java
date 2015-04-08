@@ -14,7 +14,7 @@ public class MutationTest_Settings {
 
     public static final String[] INSTANCES = {
         "instances/bisect.txt",
-        "instances/bub.txt",
+        //"instances/bub.txt",
         //"instances/find.txt",
         //"instances/fourballs.txt",
         //"instances/mid.txt",
@@ -36,8 +36,8 @@ public class MutationTest_Settings {
 
     public static final int[] GENERATIONS = {
         100,
-        1000,
-        10000
+        //1000,
+        //10000
     };
 
     public static final double[] CROSSOVER_PROBABILITY = {
