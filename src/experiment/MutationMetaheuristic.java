@@ -12,5 +12,7 @@ package experiment;
 public enum MutationMetaheuristic {
     gGa,
     ssGa,
-    HillClimbingA
+    HillClimbing,
+    HillClimbingAscendent,
+    HillClimbingAscendentWithReplacement
 }

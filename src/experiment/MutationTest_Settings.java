@@ -21,8 +21,10 @@ public class MutationTest_Settings {
     };
 
     public static final MutationMetaheuristic[] ALGORITHMS = {
-        MutationMetaheuristic.gGa, //MutationMetaheuristic.ssGa,
-    //MutationMetaheuristic.HillClimbingA
+        //MutationMetaheuristic.gGa, //MutationMetaheuristic.ssGa,
+        MutationMetaheuristic.HillClimbing,
+        MutationMetaheuristic.HillClimbingAscendent,
+        MutationMetaheuristic.HillClimbingAscendentWithReplacement
     };
 
     public static final int[] POPULATION_SIZE = {
@@ -69,6 +71,13 @@ public class MutationTest_Settings {
 
     // Hill Climbing
     public static final int[] IMPROVEMENT_ROUNDS = {
+        10
+    //10,
+    //100
+    };
+    
+     // Hill Climbing for Ascendent and ascendent with replacement
+    public static final int[] TWEAKS = {
         10
     //10,
     //100

@@ -5,14 +5,19 @@
  */
 package experiment;
 
+import static experiment.MutationMetaheuristic.HillClimbingAscendent;
+import static experiment.MutationMetaheuristic.HillClimbingAscendentWithReplacement;
 import jmetal.core.Algorithm;
 import jmetal.core.Problem;
-import jmetal.metaheuristics.hillClimbing.HillClimbingA;
+import jmetal.metaheuristics.hillClimbing.HillClimbing;
+import jmetal.metaheuristics.hillClimbing.HillClimbingAscendent;
+import jmetal.metaheuristics.hillClimbing.HillClimbingAscendentWithReplacement;
 import jmetal.metaheuristics.singleObjective.geneticAlgorithm.gGA;
 import jmetal.metaheuristics.singleObjective.geneticAlgorithm.ssGA;
 
 /**
  * Class that contains the parameters encapsulated
+ *
  * @author Prado Lima
  */
 public class MutationTest_Parameters {
@@ -30,17 +35,21 @@ public class MutationTest_Parameters {
     private String context;
     private int fitnessFunction;
     private int improvementRounds;
+    private int tweaks;
 
     //<editor-fold defaultstate="collapsed" desc="Methods">
-    
     public Algorithm getAlgorithmInstance(Problem problem) {
         switch (getAlgo()) {
             case gGa:
                 return new gGA(problem);
             case ssGa:
                 return new ssGA(problem);
-            case HillClimbingA:
-                return new HillClimbingA(problem);
+            case HillClimbing:
+                return new HillClimbing(problem);
+            case HillClimbingAscendent:
+                return new HillClimbingAscendent(problem);
+            case HillClimbingAscendentWithReplacement:
+                return new HillClimbingAscendentWithReplacement(problem);
             default:
                 throw new AssertionError();
         }
@@ -63,18 +72,21 @@ public class MutationTest_Parameters {
         System.out.println("improvementRounds: " + getImprovementRounds());
         System.out.println("----------------------------------------------------");
     }
-    
-    public static synchronized String generateAlgorithmId(final MutationMetaheuristic algorithm, final int populationSize, final int generations, final double crossoverProbability, final double mutationProbability, final String crossoverOperator, final String mutationOperator, final int executions, final String selectionOperator, final int improvementRounds) {
+
+    public static synchronized String generateAlgorithmId(final MutationMetaheuristic algorithm, final int populationSize, final int generations, final double crossoverProbability, final double mutationProbability, final String crossoverOperator, final String mutationOperator, final int executions, final String selectionOperator, final int improvementRounds, final int tweaks) {
         switch (algorithm) {
-            case HillClimbingA:
+            case HillClimbing:
                 return String.format("%s_%s_%s", improvementRounds, mutationOperator, executions);
+            case HillClimbingAscendent:
+            case HillClimbingAscendentWithReplacement:
+                return String.format("%s_%s_%s_%s", improvementRounds, mutationOperator, executions, tweaks);
             default:
                 return String.format("%s_%s_%s_%s_%s_%s_%s_%s", populationSize, generations, crossoverProbability, mutationProbability, crossoverOperator, mutationOperator, selectionOperator, executions);
         }
     }
-    
-    //</editor-fold>
 
+    //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Getters/Setters">
     /**
      * @return the instance
@@ -257,5 +269,19 @@ public class MutationTest_Parameters {
     public void setImprovementRounds(int improvementRounds) {
         this.improvementRounds = improvementRounds;
     }
-      //</editor-fold>
+
+    /**
+     * @return the tweaks
+     */
+    public int getTweaks() {
+        return tweaks;
+    }
+
+    /**
+     * @param tweaks the tweaks to set
+     */
+    public void setTweaks(int tweaks) {
+        this.tweaks = tweaks;
+    }
+    //</editor-fold>
 }

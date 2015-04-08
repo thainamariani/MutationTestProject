@@ -102,7 +102,9 @@ public class MutationTest_Multithread {
                                             for (final String mutationOperator : MutationTest_Settings.MUTATION_OPERATORS) {
                                                 for (final String selectionOperator : MutationTest_Settings.SELECTION_OPERATORS) {
                                                     for (final int improvementRounds : MutationTest_Settings.IMPROVEMENT_ROUNDS) {
-                                                        createThread(instance, algorithm, populationSize, generations, crossoverProbability, mutationProbability, crossoverOperator, mutationOperator, MutationTest_Settings.EXECUTIONS, fitnessFunction, selectionOperator, improvementRounds);
+                                                        for (final int tweaks : MutationTest_Settings.TWEAKS) {
+                                                            createThread(instance, algorithm, populationSize, generations, crossoverProbability, mutationProbability, crossoverOperator, mutationOperator, MutationTest_Settings.EXECUTIONS, fitnessFunction, selectionOperator, improvementRounds, tweaks);
+                                                        }
                                                     }
                                                 }
                                             }
@@ -279,13 +281,14 @@ public class MutationTest_Multithread {
         final int executions = Integer.valueOf(split[9]);
         final int fitnessFunction = Integer.valueOf(split[10]);
         final int improvementRounds = Integer.valueOf(split[11]);
+        final int tweaks = Integer.valueOf(split[12]);
 
-        createThread(instance, algorithm, populationSize, generations, crossoverProbability, mutationProbability, crossoverOperator, mutationOperator, executions, fitnessFunction, context, improvementRounds);
+        createThread(instance, algorithm, populationSize, generations, crossoverProbability, mutationProbability, crossoverOperator, mutationOperator, executions, fitnessFunction, context, improvementRounds, tweaks);
     }
 
-    private static synchronized void createThread(final String instance, final MutationMetaheuristic algorithm, final int populationSize, final int generations, final double crossoverProbability, final double mutationProbability, final String crossoverOperator, final String mutationOperator, final int executions, final int fitnessFunction, final String selectionOperator, final int improvementRounds) {
-        final String context = MutationTest_Parameters.generateAlgorithmId(algorithm, populationSize, generations, crossoverProbability, mutationProbability, crossoverOperator, mutationOperator, executions, selectionOperator, improvementRounds);
-         
+    private static synchronized void createThread(final String instance, final MutationMetaheuristic algorithm, final int populationSize, final int generations, final double crossoverProbability, final double mutationProbability, final String crossoverOperator, final String mutationOperator, final int executions, final int fitnessFunction, final String selectionOperator, final int improvementRounds, final int tweaks) {
+        final String context = MutationTest_Parameters.generateAlgorithmId(algorithm, populationSize, generations, crossoverProbability, mutationProbability, crossoverOperator, mutationOperator, executions, selectionOperator, improvementRounds, tweaks);
+
         final Thread thread = new Thread(new Runnable() {
 
             private Process process = null;
@@ -318,7 +321,7 @@ public class MutationTest_Multithread {
 
                     final File destination = new File(String.format("%s/SYSTEM_OUTPUT.txt", pathFile));
                     final File errorDestination = new File(String.format("%s/SYSTEM_ERROR.txt", pathFile));
-                    
+
                     {
                         final File parentFile = destination.getParentFile();
                         if (!parentFile.exists()) {

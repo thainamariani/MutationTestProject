@@ -21,9 +21,9 @@ import jmetal.util.comparators.OverallConstraintViolationComparator;
 
 /**
  *
- * @author Prado Lima
+ * @author Mariana
  */
-public class HillClimbingA extends Algorithm {
+public class HillClimbingAscendentWithReplacement extends Algorithm {
 
     /**
      *
@@ -31,46 +31,15 @@ public class HillClimbingA extends Algorithm {
      *
      * @param problem Problem to solve.
      */
-    public HillClimbingA(Problem problem) {
+    public HillClimbingAscendentWithReplacement(Problem problem) {
         super(problem);
     }
 
-    /*
-     @Override
-     public Object execute(Object object) throws JMException {
-     int rounds = improvementRounds_;
-     Solution solution = (Solution) object; // Initial Solution
-
-     if (rounds <= 0) {
-     return new Solution(solution);
-     }
-
-     int i = 0; // Iterator
-     evaluations_ = 0;
-
-     while (i < rounds) {
-     i++;
-
-     // Copy of solution
-     Solution mutatedSolution = new Solution(solution);
-
-     // Tweak
-     mutationOperator_.execute(mutatedSolution);
-     problem_.evaluate(mutatedSolution);
-     evaluations_++;
-
-     // This is: Mutated is best
-     if (dominanceComparator_.compare(mutatedSolution, solution) == -1) {
-     solution = mutatedSolution;
-     }
-     }
-
-     return new Solution(solution);
-     }*/
     @Override
     public SolutionSet execute() throws JMException, ClassNotFoundException {
         int rounds = ((Integer) this.getInputParameter("improvementRounds")).intValue();
-        int i = 0;
+        int n = ((Integer) this.getInputParameter("tweaks")).intValue();
+        int evaluations = 0;
 
         // Read the operators
         Operator mutationOperator = this.operators_.get("mutation");
@@ -78,26 +47,42 @@ public class HillClimbingA extends Algorithm {
         Solution solution = new Solution(problem_); // Initial Solution
         problem_.evaluate(solution); // Executing evalute method to get "fitness" after
 
-        while (i < rounds) {
-            i++;
-            
+        Solution best = solution;
+        while (evaluations < rounds) {
             // Copy of solution
-            Solution mutatedSolution = new Solution(solution);
+            Solution r = new Solution(solution);
 
             // Tweak
-            mutationOperator.execute(mutatedSolution);
-            problem_.evaluate(mutatedSolution); // Executing evalute method to get "fitness" after
+            mutationOperator.execute(r);
+            problem_.evaluate(r); // Executing evalute method to get "fitness" after
+            evaluations++;
 
+            for (int j = 0; j < n - 1; j++) {
+                // Copy of solution
+                Solution w = new Solution(solution);
+
+                // Tweak
+                mutationOperator.execute(w);
+                problem_.evaluate(w); // Executing evalute method to get "fitness" after
+
+                // This is: Mutated is best (Minimize)
+                if (w.getObjective(0) < r.getObjective(0)) {
+                    r = w;
+                }
+            }
+
+            solution = r;
+            
             // This is: Mutated is best (Minimize)
-            if (mutatedSolution.getObjective(0) < solution.getObjective(0)) {
-                solution = mutatedSolution;
+            if (solution.getObjective(0) < best.getObjective(0)) {
+                best = solution;
             }
         }
 
         // Return a population with the best individual
         SolutionSet resultSolution = new SolutionSet(1);
-        resultSolution.add(solution);
-        
+        resultSolution.add(best);
+
         return resultSolution;
     }
 }
