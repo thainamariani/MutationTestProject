@@ -8,11 +8,13 @@ package results;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 
@@ -25,10 +27,79 @@ public class Results {
     //conducted executions
     private static final int executions = 10;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, FileNotFoundException, InterruptedException {
         List<Path> paths = getPaths();
         for (Path path : paths) {
-            getResults(path);
+            //getResults(path);
+        }
+        selectPathsToKruskal(paths);
+    }
+
+    public static void selectPathsToKruskal(List<Path> paths) throws IOException, FileNotFoundException, InterruptedException {
+        List<Path> selectedDirectories = new ArrayList<>();
+        String actualParentDirectory = paths.get(0).getParent().toString();
+        for (int i = 0; i < paths.size(); i++) {
+            if (paths.get(i).getParent().toString().equals(actualParentDirectory)) {
+                selectedDirectories.add(paths.get(i));
+            } else {
+                doKruskalWallisTest(selectedDirectories);
+                selectedDirectories = new ArrayList<>();
+                actualParentDirectory = paths.get(i).getParent().toString();
+            }
+        }
+        doKruskalWallisTest(selectedDirectories);
+    }
+
+    public static void doKruskalWallisTest(List<Path> directories) throws FileNotFoundException, IOException, InterruptedException {
+        KruskalWallisTest kruskal = new KruskalWallisTest();
+        HashMap<String, double[]> values = new HashMap<>();
+        for (Path directory : directories) {
+            double[] funArray = new double[executions];
+            for (int i = 0; i < executions; i++) {
+                String sCurrentLine;
+                BufferedReader br = new BufferedReader(new FileReader(directory + "/FUN_" + i));
+                while ((sCurrentLine = br.readLine()) != null) {
+                    if (!"".equals(sCurrentLine)) {
+                        funArray[i] = Double.parseDouble(sCurrentLine);
+                        break;
+                    }
+                }
+            }
+            values.put(directory.toString(), funArray);
+        }
+        writeKruskalWallisTest(directories, kruskal.test(values));
+    }
+
+    public static void writeKruskalWallisTest(List<Path> directories, HashMap<String, HashMap<String, Boolean>> resultKruskal) throws IOException {
+        if (!directories.isEmpty()) {
+            Path parent = directories.get(0).getParent();
+            File writtenFile = new File(parent + "/KruskalWallisResults.txt");
+            if (!writtenFile.exists()) {
+                writtenFile.createNewFile();
+                FileWriter fw = new FileWriter(writtenFile.getAbsoluteFile());
+                BufferedWriter bw = new BufferedWriter(fw);
+
+                int count = 0;
+                for (int i = 0; i < directories.size() - 1; i++) {
+                    for (int j = i + 1; j < directories.size(); j++) {
+                        Boolean difference = resultKruskal.get(directories.get(i).toString()).get(directories.get(j).toString());
+                        bw.write("Configs");
+                        bw.newLine();
+                        bw.write(directories.get(i).toString());
+                        bw.newLine();
+                        bw.write(directories.get(j).toString());
+                        bw.newLine();
+                        bw.write("Differents? " + difference);
+                        bw.newLine();
+                        bw.newLine();
+                        bw.write("------------------------------------------------------");
+                        bw.newLine();
+                        bw.newLine();
+                        count++;
+                    }
+                }
+                bw.close();
+            }
         }
     }
 
