@@ -10,4 +10,4 @@ Active Threads = [Thread[10_BitFlipMutation_10,5,main]]
 
 Queued Threads = [Thread[10_BitFlipMutation_10,5,main], Thread[10_BitFlipMutation_10,5,main], Thread[10_BitFlipMutation_10,5,main], Thread[10_BitFlipMutation_10,5,main], Thread[10_BitFlipMutation_10,5,main]]
 
-Finished Threads = []
+Finished Threads = [100_100_0.8_0.05_SinglePointCrossover_BitFlipMutation_LinearRanking_10, 100_1000_0.8_0.05_SinglePointCrossover_BitFlipMutation_LinearRanking_10]
