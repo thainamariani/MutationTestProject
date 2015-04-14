@@ -13,6 +13,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,10 +31,56 @@ public class Results {
 
     public static void main(String[] args) throws IOException, FileNotFoundException, InterruptedException {
         List<Path> paths = getPaths();
-        for (Path path : paths) {
-            getResults(path);
-        }
-        selectPathsToKruskal(paths);
+//        for (Path path : paths) {
+//            getResults(path);
+//        }
+
+        //selectPathsToKruskal(paths);
+        doKruskalWallisTest(setDirectories());
+    }
+
+    public static List<Path> setDirectories() {
+        //final bisect
+//        List<Path> directories = new ArrayList<>();
+//        directories.add(new File("experiment/bisect/gGa/F2/50_100_0.9_0.1_UniformCrossoverBinary_SwapMutationBinary_BinaryTournament_10").toPath());
+//        directories.add(new File("experiment/bisect/HillClimbing/F2/20000_BitFlipMutation_10").toPath());
+//        directories.add(new File("experiment/bisect/HillClimbingAscendent/F2/100_BitFlipMutation_10_200").toPath());
+//        directories.add(new File("experiment/bisect/HillClimbingAscendentWithReplacement/F2/1000_BitFlipMutation_10_50").toPath());
+
+        //final bub
+//        List<Path> directories = new ArrayList<>();
+//        directories.add(new File("experiment/bub/gGa/F2/200_100_0.9_0.05_UniformCrossoverBinary_SwapMutationBinary_BinaryTournament_10").toPath());
+//        directories.add(new File("experiment/bub/HillClimbing/F2/2000000_BitFlipMutation_10").toPath());
+//        directories.add(new File("experiment/bub/HillClimbingAscendent/F2/10000_BitFlipMutation_10_200").toPath());
+//        directories.add(new File("experiment/bub/HillClimbingAscendentWithReplacement/F2/10000_BitFlipMutation_10_200").toPath());
+//        
+        //final find
+//        List<Path> directories = new ArrayList<>();
+//        directories.add(new File("experiment/find/gGa/F2/50_100_0.9_0.1_UniformCrossoverBinary_SwapMutationBinary_BinaryTournament_10").toPath());
+//        directories.add(new File("experiment/find/HillClimbing/F2/200000_BitFlipMutation_10").toPath());
+//        directories.add(new File("experiment/find/HillClimbingAscendent/F2/1000_BitFlipMutation_10_100").toPath());
+//        directories.add(new File("experiment/find/HillClimbingAscendentWithReplacement/F2/10000_BitFlipMutation_10_200").toPath());
+        //final fourballs
+//        List<Path> directories = new ArrayList<>();
+//        directories.add(new File("experiment/fourballs/gGa/F2/100_100_0.8_0.1_UniformCrossoverBinary_SwapMutationBinary_LinearRanking_10").toPath());
+//        directories.add(new File("experiment/fourballs/HillClimbing/F2/500000_BitFlipMutation_10").toPath());
+//        directories.add(new File("experiment/fourballs/HillClimbingAscendent/F2/1000_BitFlipMutation_10_200").toPath());
+//        directories.add(new File("experiment/fourballs/HillClimbingAscendentWithReplacement/F2/1000_BitFlipMutation_10_100").toPath());
+//        
+        //final mid
+//        List<Path> directories = new ArrayList<>();
+//        directories.add(new File("experiment/mid/gGa/F2/200_10000_0.9_0.1_TwoPointsCrossoverBinary_SwapMutationBinary_RouletteWheel_10").toPath());
+//        directories.add(new File("experiment/mid/HillClimbing/F2/2000000_BitFlipMutation_10").toPath());
+//        directories.add(new File("experiment/mid/HillClimbingAscendent/F2/10000_BitFlipMutation_10_200").toPath());
+//        directories.add(new File("experiment/mid/HillClimbingAscendentWithReplacement/F2/10000_BitFlipMutation_10_200").toPath());
+//        
+//final trityp
+        List<Path> directories = new ArrayList<>();
+        directories.add(new File("experiment/trityp/gGa/F2/100_100_0.9_0.1_UniformCrossoverBinary_SwapMutationBinary_BinaryTournament_10").toPath());
+        directories.add(new File("experiment/trityp/HillClimbing/F2/2000000_BitFlipMutation_10").toPath());
+        directories.add(new File("experiment/trityp/HillClimbingAscendent/F2/10000_BitFlipMutation_10_200").toPath());
+        directories.add(new File("experiment/trityp/HillClimbingAscendentWithReplacement/F2/10000_BitFlipMutation_10_200").toPath());
+        return directories;
     }
 
     public static void selectPathsToKruskal(List<Path> paths) throws IOException, FileNotFoundException, InterruptedException {
@@ -43,12 +90,69 @@ public class Results {
             if (paths.get(i).getParent().toString().equals(actualParentDirectory)) {
                 selectedDirectories.add(paths.get(i));
             } else {
-                doKruskalWallisTest(selectedDirectories);
+                writeResults(selectedDirectories);
                 selectedDirectories = new ArrayList<>();
                 actualParentDirectory = paths.get(i).getParent().toString();
             }
         }
-        doKruskalWallisTest(selectedDirectories);
+        writeResults(selectedDirectories);
+        //doKruskalWallisTest(selectedDirectories);
+    }
+
+    public static void writeResults(List<Path> directories) throws FileNotFoundException, IOException, InterruptedException {
+        List<Double> averages = new ArrayList<>();
+        List<Double> standardDeviations = new ArrayList<>();
+        
+        for (Path directory : directories) {
+            BufferedReader br = new BufferedReader(new FileReader(directory + "/RESULTS"));
+            String sCurrentLine = br.readLine();
+            if (!"".equals(sCurrentLine)) {
+                String average = sCurrentLine.substring(9, sCurrentLine.length());
+                averages.add(Double.parseDouble(average));
+                sCurrentLine = br.readLine();
+                String standardDeviation = sCurrentLine.substring(20, sCurrentLine.length());
+                standardDeviations.add(Double.parseDouble(standardDeviation));
+            }
+            br.close();
+        }
+
+        List<String> bestAveragesDirectory = new ArrayList<>();
+
+        double best = averages.get(0);
+        for (Double result : averages) {
+            if (result < best) {
+                best = result;
+            }
+        }
+
+        List<Double> bestAveragesSD = new ArrayList<>();
+        for (int i = 0; i < averages.size(); i++) {
+            if (averages.get(i) == best) {
+                bestAveragesDirectory.add(directories.get(i).toString());
+                bestAveragesSD.add(standardDeviations.get(i));
+            }
+        }
+
+        double minStandardDeviation = bestAveragesSD.get(0);
+        for (Double standardDeviation : bestAveragesSD) {
+            if (standardDeviation < minStandardDeviation) {
+                minStandardDeviation = standardDeviation;
+            }
+        }
+
+        List<String> bestStandardDeviationDirectory = new ArrayList<>();
+        for (int i = 0; i < bestAveragesSD.size(); i++) {
+            if (bestAveragesSD.get(i) == minStandardDeviation) {
+                bestStandardDeviationDirectory.add(bestAveragesDirectory.get(i));
+            }
+        }
+
+        System.out.println("Best Value: " + best);
+        System.out.println("Min Standard Deviation: " + minStandardDeviation);
+        for (String bestDirectory : bestStandardDeviationDirectory) {
+            System.out.println(bestDirectory);
+        }
+
     }
 
     public static void doKruskalWallisTest(List<Path> directories) throws FileNotFoundException, IOException, InterruptedException {
@@ -65,9 +169,11 @@ public class Results {
                         break;
                     }
                 }
+                br.close();
             }
             values.put(directory.toString(), funArray);
         }
+
         writeKruskalWallisTest(directories, kruskal.test(values));
     }
 
@@ -118,6 +224,9 @@ public class Results {
 
         //set the algorithms name
         algorithms.add("gGa");
+        algorithms.add("HillClimbing");
+        algorithms.add("HillClimbingAscendent");
+        algorithms.add("HillClimbingAscendentWithReplacement");
 
         //select the paths
         List<Path> paths = new ArrayList<>();
@@ -152,6 +261,7 @@ public class Results {
                         allFuns.add(fun);
                     }
                 }
+                br.close();
 
             }
 
@@ -177,6 +287,7 @@ public class Results {
                     var = sCurrentLine;
                 }
             }
+            brVar.close();
 
             //calculate dead mutants
             int varDeadMutants = getNumberOfDifferentKilledMutants(var, path);
