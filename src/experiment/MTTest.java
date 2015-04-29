@@ -8,6 +8,7 @@ import jmetal.core.SolutionSet;
 import jmetal.operators.crossover.CrossoverFactory;
 import jmetal.operators.mutation.MutationFactory;
 import jmetal.operators.selection.SelectionFactory;
+import jmetal.qualityIndicator.QualityIndicator;
 import jmetal.util.JMException;
 import problem.MutationTestProblem;
 import results.Results;
@@ -25,10 +26,13 @@ import results.Results;
 public class MTTest {
 
     public static void main(String[] args) throws JMException, ClassNotFoundException {
-        
+
         MutationTest_Parameters mutationParameters = VerifyParameters(args);
         //experiments configurations
         Problem problem = new MutationTestProblem(mutationParameters.getInstance(), mutationParameters.getFitnessFunction());
+
+        // Object to get quality indicators
+        QualityIndicator indicators;
 
         //select algorithm
         Algorithm algorithm = mutationParameters.getAlgorithmInstance(problem);
@@ -51,6 +55,7 @@ public class MTTest {
         parameters = new HashMap();
         parameters.put("probability", mutationParameters.getCrossoverProbability());
         crossover = CrossoverFactory.getCrossoverOperator(mutationParameters.getCrossoverOperator(), parameters);
+
         parameters = new HashMap();
         parameters.put("probability", mutationParameters.getMutationProbability());
         mutation = MutationFactory.getMutationOperator(mutationParameters.getMutationOperator(), parameters);
@@ -64,6 +69,12 @@ public class MTTest {
         algorithm.addOperator("mutation", mutation);
         algorithm.addOperator("selection", selection);
 
+        // Add the indicator object to the algorithm, only NSGA-II, for yet
+        if (mutationParameters.getAlgo() == MutationMetaheuristic.NSGAII) {
+            indicators = new QualityIndicator(problem, mutationParameters.getInstance());
+            algorithm.setInputParameter("indicators", indicators);
+        }
+        
         String path = "";
         /* Execute the Algorithm */
         for (int i = 0; i < mutationParameters.getExecutions(); i++) {
@@ -82,6 +93,19 @@ public class MTTest {
 
             System.out.println("Variables values have been writen to file " + pathVar);
             population.printVariablesToFile(pathVar);
+            /*
+             if (indicators != null) {
+             System.out.println("Quality indicators") ;
+             System.out.println("Hypervolume: " + indicators.getHypervolume(population)) ;
+             System.out.println("GD         : " + indicators.getGD(population)) ;
+             System.out.println("IGD        : " + indicators.getIGD(population)) ;
+             System.out.println("Spread     : " + indicators.getSpread(population)) ;
+             System.out.println("Epsilon    : " + indicators.getEpsilon(population)) ;  
+     
+             int evaluations = ((Integer)algorithm.getOutputParameter("evaluations")).intValue();
+             System.out.println("Speed      : " + evaluations + " evaluations") ;      
+             } // if 
+             */
         }
 
     }

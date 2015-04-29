@@ -119,6 +119,9 @@ public class MutationTestProblem extends Problem {
         }
 
         solution.setObjective(0, -result);
+        
+        
+        //solution.setObjective(1, -result);
 
 //        //mutation score calculation
 //        double deadMutants = killedMutants.size(); //dm(p,t)

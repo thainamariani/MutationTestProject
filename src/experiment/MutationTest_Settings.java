@@ -23,9 +23,10 @@ public class MutationTest_Settings {
 
     public static final MutationMetaheuristic[] ALGORITHMS = {
         //MutationMetaheuristic.gGa, //MutationMetaheuristic.ssGa,
-        MutationMetaheuristic.HillClimbing,
-        MutationMetaheuristic.HillClimbingAscendent,
-        MutationMetaheuristic.HillClimbingAscendentWithReplacement
+        //MutationMetaheuristic.HillClimbing,
+        //MutationMetaheuristic.HillClimbingAscendent,
+        //MutationMetaheuristic.HillClimbingAscendentWithReplacement
+        MutationMetaheuristic.NSGAII
     };
 
     public static final int[] POPULATION_SIZE = {
