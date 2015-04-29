@@ -45,7 +45,7 @@ public class MutationTestProblem extends Problem {
         this.numberOfTestSuite = numberOfTestSuite;
 
         // JMetal's Settings
-        numberOfObjectives_ = 1;
+        numberOfObjectives_ = 2;
         numberOfConstraints_ = 0;
         numberOfVariables_ = 1;
         length_ = new int[numberOfVariables_];

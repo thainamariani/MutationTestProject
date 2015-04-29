@@ -72,6 +72,7 @@ public class MTTest {
 
         /* Execute the Algorithm */
         for (int i = 0; i < mutationParameters.getExecutions(); i++) {
+            NonDominatedSolutionList actualNonDominatedSolutions = new NonDominatedSolutionList();
             System.out.println("Run: " + i);
             long initTime = System.currentTimeMillis();
             SolutionSet population = algorithm.execute();
@@ -85,13 +86,16 @@ public class MTTest {
             for (Iterator<Solution> iterator = population.iterator(); iterator.hasNext();) {
                 Solution solution = iterator.next();
                 nonDominatedSolutions.add(solution);
+                actualNonDominatedSolutions.add(solution);
             }
+            removeRepeated(actualNonDominatedSolutions);
 
             System.out.println("Objectives values have been writen to file " + pathFun);
-            population.printObjectivesToFile(pathFun);
+            actualNonDominatedSolutions.printObjectivesToFile(pathFun);
 
             System.out.println("Variables values have been writen to file " + pathVar);
-            population.printVariablesToFile(pathVar);
+            actualNonDominatedSolutions.printVariablesToFile(pathVar);
+
         }
 
         printFinalSolutions(nonDominatedSolutions, mutationParameters);
@@ -99,6 +103,15 @@ public class MTTest {
 
     private static void printFinalSolutions(NonDominatedSolutionList nonDominatedSolutions, MutationTest_Parameters mutationParameters) {
         String path;
+        removeRepeated(nonDominatedSolutions);
+        path = String.format("experiment/%s/%s/F%s/%s", getInstanceName(mutationParameters.getInstance()), mutationParameters.getAlgo(), mutationParameters.getFitnessFunction(), mutationParameters.getContext());
+        String pathFunAll = path + "/FUN_All";
+        String pathVarAll = path + "/VAR_All";
+        nonDominatedSolutions.printObjectivesToFile(pathFunAll);
+        nonDominatedSolutions.printVariablesToFile(pathVarAll);
+    }
+
+    private static void removeRepeated(NonDominatedSolutionList nonDominatedSolutions) {
         for (int i = 0; i < nonDominatedSolutions.size() - 1; i++) {
             String solucao = nonDominatedSolutions.get(i).getDecisionVariables()[0].toString();
             for (int j = i + 1; j < nonDominatedSolutions.size(); j++) {
@@ -109,11 +122,6 @@ public class MTTest {
                 }
             }
         }
-        path = String.format("experiment/%s/%s/F%s/%s", getInstanceName(mutationParameters.getInstance()), mutationParameters.getAlgo(), mutationParameters.getFitnessFunction(), mutationParameters.getContext());
-        String pathFunAll = path + "/FUN_All";
-        String pathVarAll = path + "/VAR_All";
-        nonDominatedSolutions.printObjectivesToFile(pathFunAll);
-        nonDominatedSolutions.printVariablesToFile(pathVarAll);
     }
 
     private static MutationTest_Parameters VerifyParameters(String[] args) {
