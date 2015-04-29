@@ -1,17 +1,18 @@
 package experiment;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import jmetal.core.Algorithm;
 import jmetal.core.Operator;
 import jmetal.core.Problem;
+import jmetal.core.Solution;
 import jmetal.core.SolutionSet;
 import jmetal.operators.crossover.CrossoverFactory;
 import jmetal.operators.mutation.MutationFactory;
 import jmetal.operators.selection.SelectionFactory;
-import jmetal.qualityIndicator.QualityIndicator;
 import jmetal.util.JMException;
+import jmetal.util.NonDominatedSolutionList;
 import problem.MutationTestProblem;
-import results.Results;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -30,9 +31,6 @@ public class MTTest {
         MutationTest_Parameters mutationParameters = VerifyParameters(args);
         //experiments configurations
         Problem problem = new MutationTestProblem(mutationParameters.getInstance(), mutationParameters.getFitnessFunction());
-
-        // Object to get quality indicators
-        QualityIndicator indicators;
 
         //select algorithm
         Algorithm algorithm = mutationParameters.getAlgorithmInstance(problem);
@@ -69,13 +67,9 @@ public class MTTest {
         algorithm.addOperator("mutation", mutation);
         algorithm.addOperator("selection", selection);
 
-        // Add the indicator object to the algorithm, only NSGA-II, for yet
-        if (mutationParameters.getAlgo() == MutationMetaheuristic.NSGAII) {
-            indicators = new QualityIndicator(problem, mutationParameters.getInstance());
-            algorithm.setInputParameter("indicators", indicators);
-        }
-        
+        NonDominatedSolutionList nonDominatedSolutions = new NonDominatedSolutionList();
         String path = "";
+
         /* Execute the Algorithm */
         for (int i = 0; i < mutationParameters.getExecutions(); i++) {
             System.out.println("Run: " + i);
@@ -88,26 +82,38 @@ public class MTTest {
             String pathFun = String.format("%s/FUN_%s", path, i);
             String pathVar = String.format("%s/VAR_%s", path, i);
 
+            for (Iterator<Solution> iterator = population.iterator(); iterator.hasNext();) {
+                Solution solution = iterator.next();
+                nonDominatedSolutions.add(solution);
+            }
+
             System.out.println("Objectives values have been writen to file " + pathFun);
             population.printObjectivesToFile(pathFun);
 
             System.out.println("Variables values have been writen to file " + pathVar);
             population.printVariablesToFile(pathVar);
-            /*
-             if (indicators != null) {
-             System.out.println("Quality indicators") ;
-             System.out.println("Hypervolume: " + indicators.getHypervolume(population)) ;
-             System.out.println("GD         : " + indicators.getGD(population)) ;
-             System.out.println("IGD        : " + indicators.getIGD(population)) ;
-             System.out.println("Spread     : " + indicators.getSpread(population)) ;
-             System.out.println("Epsilon    : " + indicators.getEpsilon(population)) ;  
-     
-             int evaluations = ((Integer)algorithm.getOutputParameter("evaluations")).intValue();
-             System.out.println("Speed      : " + evaluations + " evaluations") ;      
-             } // if 
-             */
         }
 
+        printFinalSolutions(nonDominatedSolutions, mutationParameters);
+    }
+
+    private static void printFinalSolutions(NonDominatedSolutionList nonDominatedSolutions, MutationTest_Parameters mutationParameters) {
+        String path;
+        for (int i = 0; i < nonDominatedSolutions.size() - 1; i++) {
+            String solucao = nonDominatedSolutions.get(i).getDecisionVariables()[0].toString();
+            for (int j = i + 1; j < nonDominatedSolutions.size(); j++) {
+                String solucaoB = nonDominatedSolutions.get(j).getDecisionVariables()[0].toString();
+                if (solucao.equals(solucaoB)) {
+                    nonDominatedSolutions.remove(j);
+                    j--;
+                }
+            }
+        }
+        path = String.format("experiment/%s/%s/F%s/%s", getInstanceName(mutationParameters.getInstance()), mutationParameters.getAlgo(), mutationParameters.getFitnessFunction(), mutationParameters.getContext());
+        String pathFunAll = path + "/FUN_All";
+        String pathVarAll = path + "/VAR_All";
+        nonDominatedSolutions.printObjectivesToFile(pathFunAll);
+        nonDominatedSolutions.printVariablesToFile(pathVarAll);
     }
 
     private static MutationTest_Parameters VerifyParameters(String[] args) {

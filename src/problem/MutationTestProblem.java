@@ -12,6 +12,7 @@ import jmetal.core.Solution;
 import jmetal.encodings.solutionType.BinarySolutionType;
 import jmetal.encodings.variable.Binary;
 import jmetal.util.JMException;
+import jmetal.util.PseudoRandom;
 import pojo.Mutant;
 import pojo.TestCase;
 import util.InstanceReader;
@@ -67,7 +68,7 @@ public class MutationTestProblem extends Problem {
         reader.close();
 
         // JMetal's Settings
-        numberOfObjectives_ = 1;
+        numberOfObjectives_ = 2;
         numberOfConstraints_ = 0;
         numberOfVariables_ = 1;
         length_ = new int[numberOfVariables_];
@@ -111,27 +112,26 @@ public class MutationTestProblem extends Problem {
         double numberOfSelectedTestSuite = getNumberOfSelectedTestSuite(s);
 
         //fitness function calculation
-        double result;
-        if (fitnessFunction == 1) {
-            result = fitnessFunction(mutationScore, numberOfSelectedTestSuite);
-        } else {
-            result = fitnessFunction(1, 1, mutationScore, numberOfSelectedTestSuite, numberOfTestSuite);
+//        double result;
+//        if (fitnessFunction == 1) {
+//            result = fitnessFunction(mutationScore, numberOfSelectedTestSuite);
+//        } else {
+//            result = fitnessFunction(1, 1, mutationScore, numberOfSelectedTestSuite, numberOfTestSuite);
+//        }
+        //multiobjective
+        solution.setObjective(0, mutationScore * -1);
+        solution.setObjective(1, numberOfSelectedTestSuite);
+    }
+
+    @Override
+    public void evaluateConstraints(Solution solution) throws JMException {
+        Binary binarySolution = (Binary) solution.getDecisionVariables()[0];
+        int numberOfSelectedTestSuite = getNumberOfSelectedTestSuite(binarySolution);
+        if (numberOfSelectedTestSuite == 0) {
+            int random = PseudoRandom.randInt(0, binarySolution.getNumberOfBits() - 1);
+            binarySolution.setIth(random, true);
+            evaluate(solution);
         }
-
-        solution.setObjective(0, -result);
-        
-        
-        //solution.setObjective(1, -result);
-
-//        //mutation score calculation
-//        double deadMutants = killedMutants.size(); //dm(p,t)
-//        double totalMutants = mutants.size(); //m(p)
-//        double mutationScore = deadMutants / totalMutants; //ms(p,t)
-//
-//        //fitness function calculation
-//        double result = fitnessFunction(mutationScore, numberOfSelectedTestCases);
-//        //double result = fitnessFunction(1, 1, mutationScore, numberOfTestSuites, testSuites.size());
-//        solution.setObjective(0, result);
     }
 
     public double getMutantionScore(Binary s) {

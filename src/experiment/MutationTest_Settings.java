@@ -13,12 +13,12 @@ package experiment;
 public class MutationTest_Settings {
 
     public static final String[] INSTANCES = {
-        "instances/bisect.txt",
+        //"instances/bisect.txt",
         "instances/bub.txt",
-        "instances/find.txt",
-        "instances/fourballs.txt",
-        "instances/mid.txt",
-        "instances/trityp.txt"
+        //"instances/find.txt",
+        //"instances/fourballs.txt",
+        //"instances/mid.txt",
+        //"instances/trityp.txt"
     };
 
     public static final MutationMetaheuristic[] ALGORITHMS = {
@@ -31,41 +31,41 @@ public class MutationTest_Settings {
 
     public static final int[] POPULATION_SIZE = {
         50,
-        100,
-        200
+        //100,
+        //200
     };
 
     public static final int[] GENERATIONS = {
         100,
-        1000,
-        10000
+        //1000,
+        //10000
     };
 
     public static final double[] CROSSOVER_PROBABILITY = {
         0.8,
-        0.9
+        //0.9
     };
 
     public static final double[] MUTATION_PROBABILITY = {
         0.05, 
-        0.1
+        //0.1
     };
 
     public static final String[] CROSSOVER_OPERATORS = {
-        "SinglePointCrossover",
-        "TwoPointsCrossoverBinary",
+        //"SinglePointCrossover",
+        //"TwoPointsCrossoverBinary",
         "UniformCrossoverBinary"
     };
 
     public static final String[] MUTATION_OPERATORS = {
-        "BitFlipMutation",
+        //"BitFlipMutation",
         "SwapMutationBinary"
     };
 
     public static final String[] SELECTION_OPERATORS = {
-        //"BinaryTournament",
+        "BinaryTournament",
         //"RouletteWheel",
-        "LinearRanking"
+        //"LinearRanking"
     };
 
     public static final int[] FITNESS_FUNCTIONS = {
@@ -87,5 +87,5 @@ public class MutationTest_Settings {
         //200
     };
 
-    public static final int EXECUTIONS = 10;
+    public static final int EXECUTIONS = 30;
 }
