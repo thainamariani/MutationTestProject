@@ -42,23 +42,30 @@ public class MTTest {
         algorithm.setInputParameter("populationSize", mutationParameters.getPopulationSize());
         algorithm.setInputParameter("maxEvaluations", mutationParameters.getPopulationSize() * mutationParameters.getGenerations());
         algorithm.setInputParameter("improvementRounds", mutationParameters.getImprovementRounds());
-        algorithm.setInputParameter("tweaks", mutationParameters.getTweaks());
+        algorithm.setInputParameter("tweaks", mutationParameters.getTweaks());  
+        
+        // Paramter for MOEA/D and MOEA/DD
+        algorithm.setInputParameter("dataDirectory", System.getProperty("user.dir") + "/src/weight");
 
         Operator crossover;         // Crossover operator
         Operator mutation;         // Mutation operator
         Operator selection;         // Selection operator
 
         HashMap parameters; // Operator parameters
-        // Mutation and Crossover for Real codification
+        
+         // Crossover operator
         parameters = new HashMap();
         parameters.put("probability", mutationParameters.getCrossoverProbability());
+        parameters.put("distributionIndex", 30.0);
         crossover = CrossoverFactory.getCrossoverOperator(mutationParameters.getCrossoverOperator(), parameters);
 
+        // Mutation operator
         parameters = new HashMap();
         parameters.put("probability", mutationParameters.getMutationProbability());
+        parameters.put("distributionIndex", 20.0);
         mutation = MutationFactory.getMutationOperator(mutationParameters.getMutationOperator(), parameters);
 
-        /* Selection Operator */
+        // Selection Operator 
         parameters = null;
         selection = SelectionFactory.getSelectionOperator(mutationParameters.getSelectionOperator(), parameters);
 

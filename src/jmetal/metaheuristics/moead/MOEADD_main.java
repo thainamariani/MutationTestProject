@@ -39,6 +39,9 @@ import java.util.HashMap;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
+/**
+ * @author Prado Lima
+ */
 public class MOEADD_main {
 
     public static Logger logger_; // Logger object
@@ -117,7 +120,7 @@ public class MOEADD_main {
         algorithm.setInputParameter("populationSize", 91);
         algorithm.setInputParameter("maxEvaluations", 91 * 400);
 
-        algorithm.setInputParameter("dataDirectory", "weight");
+        algorithm.setInputParameter("dataDirectory", System.getProperty("user.dir") + "/src/weight");
 
         // Crossover operator
         parameters = new HashMap();

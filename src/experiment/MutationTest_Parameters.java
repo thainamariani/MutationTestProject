@@ -7,12 +7,14 @@ package experiment;
 
 import static experiment.MutationMetaheuristic.HillClimbingAscendent;
 import static experiment.MutationMetaheuristic.HillClimbingAscendentWithReplacement;
+import static experiment.MutationMetaheuristic.MOEADD;
 import static experiment.MutationMetaheuristic.NSGAII;
 import jmetal.core.Algorithm;
 import jmetal.core.Problem;
 import jmetal.metaheuristics.hillClimbing.HillClimbing;
 import jmetal.metaheuristics.hillClimbing.HillClimbingAscendent;
 import jmetal.metaheuristics.hillClimbing.HillClimbingAscendentWithReplacement;
+import jmetal.metaheuristics.moead.MOEADD;
 import jmetal.metaheuristics.nsgaII.NSGAII;
 import jmetal.metaheuristics.singleObjective.geneticAlgorithm.gGA;
 import jmetal.metaheuristics.singleObjective.geneticAlgorithm.ssGA;
@@ -54,6 +56,8 @@ public class MutationTest_Parameters {
                 return new HillClimbingAscendentWithReplacement(problem);
             case NSGAII:
                 return new NSGAII(problem);
+            case MOEADD:
+                return new MOEADD(problem);
             default:
                 throw new AssertionError();
         }

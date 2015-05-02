@@ -2,19 +2,19 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2015-04-29T16:58:03</date>
-  <millis>1430337483030</millis>
+  <date>2015-05-01T22:21:15</date>
+  <millis>1430529675475</millis>
   <sequence>0</sequence>
   <logger>jMetal</logger>
   <level>INFO</level>
   <class>jmetal.metaheuristics.moead.MOEADD_main</class>
   <method>main</method>
   <thread>1</thread>
-  <message>Total execution time: 2674ms</message>
+  <message>Total execution time: 2336ms</message>
 </record>
 <record>
-  <date>2015-04-29T16:58:03</date>
-  <millis>1430337483134</millis>
+  <date>2015-05-01T22:21:15</date>
+  <millis>1430529675534</millis>
   <sequence>1</sequence>
   <logger>jMetal</logger>
   <level>INFO</level>
@@ -24,8 +24,8 @@
   <message>Variables values have been writen to file VAR</message>
 </record>
 <record>
-  <date>2015-04-29T16:58:03</date>
-  <millis>1430337483135</millis>
+  <date>2015-05-01T22:21:15</date>
+  <millis>1430529675537</millis>
   <sequence>2</sequence>
   <logger>jMetal</logger>
   <level>INFO</level>
