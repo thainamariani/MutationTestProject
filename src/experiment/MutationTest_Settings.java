@@ -27,8 +27,8 @@ public class MutationTest_Settings {
         //MutationMetaheuristic.HillClimbing,
         //MutationMetaheuristic.HillClimbingAscendent,
         //MutationMetaheuristic.HillClimbingAscendentWithReplacement
-        //MutationMetaheuristic.NSGAII,
-        MutationMetaheuristic.MOEADD
+        MutationMetaheuristic.NSGAII,
+        //MutationMetaheuristic.MOEADD
     };
 
     public static final int[] POPULATION_SIZE = {
