@@ -13,12 +13,16 @@ package experiment;
 public class MutationTest_Settings {
 
     public static final String[] INSTANCES = {
-        //"instances/bisect.txt",
+        "instances/bisect.txt",
         "instances/bub.txt",
-        //"instances/find.txt",
-        //"instances/fourballs.txt",
-        //"instances/mid.txt",
-        //"instances/trityp.txt"
+        "instances/find.txt",
+        "instances/fourballs.txt",
+        "instances/mid.txt",
+        "instances/trityp.txt",
+        "instances/guizzo_cas.txt",
+        "instances/guizzo_james.txt",
+        "instances/guizzo_save.txt",
+        "instances/guizzo_weatherstation.txt"
     };
 
     public static final MutationMetaheuristic[] ALGORITHMS = {
@@ -28,29 +32,30 @@ public class MutationTest_Settings {
         //MutationMetaheuristic.HillClimbingAscendent,
         //MutationMetaheuristic.HillClimbingAscendentWithReplacement
         MutationMetaheuristic.NSGAII,
-        //MutationMetaheuristic.MOEADD
+        MutationMetaheuristic.SPEA2,
+        MutationMetaheuristic.IBEA, //MutationMetaheuristic.MOEADD
     };
 
     public static final int[] POPULATION_SIZE = {
         50,
-        //100,
-        //200
+        100,
+        200
     };
 
     public static final int[] GENERATIONS = {
         100,
-        //1000,
-        //10000
+        1000,
+        10000
     };
 
     public static final double[] CROSSOVER_PROBABILITY = {
         0.8,
-        //0.9
+        0.9
     };
 
     public static final double[] MUTATION_PROBABILITY = {
-        0.05, 
-        //0.1
+        0.05,
+        0.1
     };
 
     public static final String[] CROSSOVER_OPERATORS = {
@@ -65,7 +70,7 @@ public class MutationTest_Settings {
     };
 
     public static final String[] SELECTION_OPERATORS = {
-        "BinaryTournament",
+        "BinaryTournament2",
         //"RouletteWheel",
         //"LinearRanking"
     };
@@ -77,16 +82,14 @@ public class MutationTest_Settings {
 
     // Hill Climbing
     public static final int[] IMPROVEMENT_ROUNDS = {
-        100,
-        //1000,
-        //10000
+        100, //1000,
+    //10000
     };
 
     // Hill Climbing for Ascendent and ascendent with replacement
     public static final int[] TWEAKS = {
-        50,
-        //100,
-        //200
+        50, //100,
+    //200
     };
 
     public static final int EXECUTIONS = 30;

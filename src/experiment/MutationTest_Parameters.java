@@ -7,17 +7,21 @@ package experiment;
 
 import static experiment.MutationMetaheuristic.HillClimbingAscendent;
 import static experiment.MutationMetaheuristic.HillClimbingAscendentWithReplacement;
+import static experiment.MutationMetaheuristic.IBEA;
 import static experiment.MutationMetaheuristic.MOEADD;
 import static experiment.MutationMetaheuristic.NSGAII;
+import static experiment.MutationMetaheuristic.SPEA2;
 import jmetal.core.Algorithm;
 import jmetal.core.Problem;
 import jmetal.metaheuristics.hillClimbing.HillClimbing;
 import jmetal.metaheuristics.hillClimbing.HillClimbingAscendent;
 import jmetal.metaheuristics.hillClimbing.HillClimbingAscendentWithReplacement;
+import jmetal.metaheuristics.ibea.IBEA;
 import jmetal.metaheuristics.moead.MOEADD;
 import jmetal.metaheuristics.nsgaII.NSGAII;
 import jmetal.metaheuristics.singleObjective.geneticAlgorithm.gGA;
 import jmetal.metaheuristics.singleObjective.geneticAlgorithm.ssGA;
+import jmetal.metaheuristics.spea2.SPEA2;
 
 /**
  * Class that contains the parameters encapsulated
@@ -56,6 +60,10 @@ public class MutationTest_Parameters {
                 return new HillClimbingAscendentWithReplacement(problem);
             case NSGAII:
                 return new NSGAII(problem);
+            case SPEA2:
+                return new SPEA2(problem);
+            case IBEA:
+                return new IBEA(problem);
             case MOEADD:
                 return new MOEADD(problem);
             default:
@@ -94,7 +102,6 @@ public class MutationTest_Parameters {
     }
 
     //</editor-fold>
-    
     //<editor-fold defaultstate="collapsed" desc="Getters/Setters">
     /**
      * @return the instance

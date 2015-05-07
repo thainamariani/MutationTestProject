@@ -16,7 +16,8 @@ public enum MutationMetaheuristic {
     HillClimbingAscendent,
     HillClimbingAscendentWithReplacement,
     NSGAII,
-    
+    NSGAIII,
+    IBEA,
     // MOEAD/D
     MOEADD,
     SPEA2

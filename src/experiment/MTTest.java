@@ -41,28 +41,33 @@ public class MTTest {
         // Algorithm params
         algorithm.setInputParameter("populationSize", mutationParameters.getPopulationSize());
         algorithm.setInputParameter("maxEvaluations", mutationParameters.getPopulationSize() * mutationParameters.getGenerations());
-        algorithm.setInputParameter("improvementRounds", mutationParameters.getImprovementRounds());
-        algorithm.setInputParameter("tweaks", mutationParameters.getTweaks());  
+
+        //Hill Climbing Parameters
+        //algorithm.setInputParameter("improvementRounds", mutationParameters.getImprovementRounds());
+        //algorithm.setInputParameter("tweaks", mutationParameters.getTweaks());
         
-        // Paramter for MOEA/D and MOEA/DD
-        algorithm.setInputParameter("dataDirectory", System.getProperty("user.dir") + "/src/weight");
+        // Parameter for MOEA/D and MOEA/DD
+        //algorithm.setInputParameter("dataDirectory", System.getProperty("user.dir") + "/src/weight");
+
+        //Parameter for SPEA and IBEA
+        algorithm.setInputParameter("archiveSize", mutationParameters.getPopulationSize());
 
         Operator crossover;         // Crossover operator
         Operator mutation;         // Mutation operator
         Operator selection;         // Selection operator
 
         HashMap parameters; // Operator parameters
-        
-         // Crossover operator
+
+        // Crossover operator
         parameters = new HashMap();
         parameters.put("probability", mutationParameters.getCrossoverProbability());
-        parameters.put("distributionIndex", 30.0);
+        //parameters.put("distributionIndex", 30.0);
         crossover = CrossoverFactory.getCrossoverOperator(mutationParameters.getCrossoverOperator(), parameters);
 
         // Mutation operator
         parameters = new HashMap();
         parameters.put("probability", mutationParameters.getMutationProbability());
-        parameters.put("distributionIndex", 20.0);
+        //parameters.put("distributionIndex", 20.0);
         mutation = MutationFactory.getMutationOperator(mutationParameters.getMutationOperator(), parameters);
 
         // Selection Operator 
