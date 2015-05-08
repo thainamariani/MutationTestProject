@@ -1,4 +1,4 @@
-package experiment.nsgaIII;
+package experiment;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,9 +33,10 @@ import org.uma.jmetal.util.fileoutput.impl.DefaultFileOutputContext;
 import problem.MutationTestProblem;
 import problem.MutationTestProblem4NSGAIII;
 
-public class Main_NSGAIII {
+public class MTTest50 {
 
 	public static void main(String[] args) throws JMetalException {
+            
 	    Problem problem;
 	    Algorithm algorithm;
 	    CrossoverOperator crossover;

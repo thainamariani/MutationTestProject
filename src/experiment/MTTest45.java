@@ -24,33 +24,17 @@ import problem.MutationTestProblem;
  *
  * @author thiagodnf
  */
-public class MTTest {
+public class MTTest45 {
 
     public static void main(String[] args) throws JMException, ClassNotFoundException {
 
         MutationTest_Parameters mutationParameters = VerifyParameters(args);
-        //experiments configurations
-        Problem problem = new MutationTestProblem(mutationParameters.getInstance(), mutationParameters.getFitnessFunction());
-
-        //select algorithm
-        Algorithm algorithm = mutationParameters.getAlgorithmInstance(problem);
 
         //print parameters
         mutationParameters.PrintParameters();
-
-        // Algorithm params
-        algorithm.setInputParameter("populationSize", mutationParameters.getPopulationSize());
-        algorithm.setInputParameter("maxEvaluations", mutationParameters.getPopulationSize() * mutationParameters.getGenerations());
-
-        //Hill Climbing Parameters
-        //algorithm.setInputParameter("improvementRounds", mutationParameters.getImprovementRounds());
-        //algorithm.setInputParameter("tweaks", mutationParameters.getTweaks());
         
-        // Parameter for MOEA/D and MOEA/DD
-        //algorithm.setInputParameter("dataDirectory", System.getProperty("user.dir") + "/src/weight");
-
-        //Parameter for SPEA and IBEA
-        algorithm.setInputParameter("archiveSize", mutationParameters.getPopulationSize());
+        //select problem
+        Problem problem = new MutationTestProblem(mutationParameters.getInstance(), mutationParameters.getFitnessFunction());
 
         Operator crossover;         // Crossover operator
         Operator mutation;         // Mutation operator
@@ -73,6 +57,22 @@ public class MTTest {
         // Selection Operator 
         parameters = null;
         selection = SelectionFactory.getSelectionOperator(mutationParameters.getSelectionOperator(), parameters);
+
+        //select algorithm
+        Algorithm algorithm = mutationParameters.getAlgorithmInstance(problem);
+
+        // Algorithm params
+        algorithm.setInputParameter("populationSize", mutationParameters.getPopulationSize());
+        algorithm.setInputParameter("maxEvaluations", mutationParameters.getPopulationSize() * mutationParameters.getGenerations());
+
+        //Hill Climbing Parameters
+        //algorithm.setInputParameter("improvementRounds", mutationParameters.getImprovementRounds());
+        //algorithm.setInputParameter("tweaks", mutationParameters.getTweaks());
+        // Parameter for MOEA/D and MOEA/DD
+        //algorithm.setInputParameter("dataDirectory", System.getProperty("user.dir") + "/src/weight");
+        //Parameter for SPEA and IBEA
+        algorithm.setInputParameter("archiveSize", mutationParameters.getPopulationSize());
+
 
         /* Add the operators to the algorithm*/
         algorithm.addOperator("crossover", crossover);

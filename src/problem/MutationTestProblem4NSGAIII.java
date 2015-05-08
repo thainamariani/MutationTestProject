@@ -1,6 +1,7 @@
 package problem;
 
 import java.util.BitSet;
+import jmetal.encodings.solutionType.BinarySolutionType;
 
 import jmetal.encodings.variable.Binary;
 import jmetal.util.PseudoRandom;
@@ -37,6 +38,16 @@ public class MutationTestProblem4NSGAIII extends AbstractBinaryProblem implement
         setNumberOfObjectives(2);
         setName("MutationTestProblem4NSGAIII");
 	}
+        
+        public MutationTestProblem4NSGAIII(int numberOfTestSuite, int numberOfMutants, int[][] coverage) {
+        this.coverage = coverage;
+        this.numberOfMutants = numberOfMutants;
+        this.numberOfTestSuite = numberOfTestSuite;
+
+        setNumberOfVariables(1);
+        setNumberOfObjectives(2);
+        setName("MutationTestProblem4NSGAIII");
+    }
 
 	@Override
 	public void evaluate(BinarySolution solution) {

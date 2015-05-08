@@ -33,7 +33,8 @@ public class MutationTest_Settings {
         //MutationMetaheuristic.HillClimbingAscendentWithReplacement
         MutationMetaheuristic.NSGAII,
         MutationMetaheuristic.SPEA2,
-        MutationMetaheuristic.IBEA, //MutationMetaheuristic.MOEADD
+        MutationMetaheuristic.IBEA,
+        MutationMetaheuristic.NSGAIII
     };
 
     public static final int[] POPULATION_SIZE = {

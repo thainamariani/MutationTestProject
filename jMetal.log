@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2015-05-07T21:22:16</date>
+  <millis>1431044536039</millis>
+  <sequence>0</sequence>
+  <logger>jMetal</logger>
+  <level>INFO</level>
+  <class>experiment.nsgaIII.Main_NSGAIII</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>Total execution time: 56ms</message>
+</record>
+<record>
+  <date>2015-05-07T21:22:16</date>
+  <millis>1431044536320</millis>
+  <sequence>1</sequence>
+  <logger>jMetal</logger>
+  <level>INFO</level>
+  <class>experiment.nsgaIII.Main_NSGAIII</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>Objectives values have been written to file FUN.tsv</message>
+</record>
+<record>
+  <date>2015-05-07T21:22:16</date>
+  <millis>1431044536322</millis>
+  <sequence>2</sequence>
+  <logger>jMetal</logger>
+  <level>INFO</level>
+  <class>experiment.nsgaIII.Main_NSGAIII</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>Variables values have been written to file VAR.tsv</message>
+</record>
+</log>

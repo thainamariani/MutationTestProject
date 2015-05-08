@@ -287,6 +287,7 @@ public class MutationTest_Multithread {
     }
 
     private static synchronized void createThread(final String instance, final MutationMetaheuristic algorithm, final int populationSize, final int generations, final double crossoverProbability, final double mutationProbability, final String crossoverOperator, final String mutationOperator, final int executions, final int fitnessFunction, final String selectionOperator, final int improvementRounds, final int tweaks) {
+
         final String context = MutationTest_Parameters.generateAlgorithmId(algorithm, populationSize, generations, crossoverProbability, mutationProbability, crossoverOperator, mutationOperator, executions, selectionOperator, improvementRounds, tweaks);
 
         final Thread thread = new Thread(new Runnable() {
@@ -301,7 +302,7 @@ public class MutationTest_Multithread {
                             "-Xmx5G",
                             "-classpath",
                             "dist/MutationTestProject.jar",
-                            "experiment.MTTest",
+                            getExperimentClassName(algorithm),
                             "" + instance,
                             "" + algorithm,
                             "" + populationSize,
@@ -356,6 +357,14 @@ public class MutationTest_Multithread {
             }
         }, context);
         addThreadToQueue(thread);
+    }
+
+    private static String getExperimentClassName(final MutationMetaheuristic algorithm) {
+        String experimentName = "experiment.MTTest45";
+        if (algorithm.equals("NSGAIII")) {
+            experimentName = "experiment.MTTest50";
+        }
+        return experimentName;
     }
 
     public static String getInstanceName(String path) {
