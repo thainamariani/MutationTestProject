@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="lib/jmetal-5.0/jmetal-exec-5.0-Beta-29.jar"/>
 	<classpathentry kind="lib" path="lib/jmetal-5.0/jmetal-problem-5.0-Beta-29.jar"/>
 	<classpathentry kind="lib" path="lib/commons-lang3-3.3.2.jar"/>
+	<classpathentry kind="lib" path="lib/moea-framework-2.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
