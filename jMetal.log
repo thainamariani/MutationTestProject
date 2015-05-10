@@ -2,36 +2,51 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2015-05-07T21:22:16</date>
-  <millis>1431044536039</millis>
+  <date>2015-05-09T23:53:47</date>
+  <millis>1431226427437</millis>
   <sequence>0</sequence>
   <logger>jMetal</logger>
-  <level>INFO</level>
-  <class>experiment.nsgaIII.Main_NSGAIII</class>
-  <method>main</method>
+  <level>SEVERE</level>
+  <class>org.uma.jmetal.util.JMetalException</class>
+  <method>&lt;init&gt;</method>
   <thread>1</thread>
-  <message>Total execution time: 56ms</message>
-</record>
-<record>
-  <date>2015-05-07T21:22:16</date>
-  <millis>1431044536320</millis>
-  <sequence>1</sequence>
-  <logger>jMetal</logger>
-  <level>INFO</level>
-  <class>experiment.nsgaIII.Main_NSGAIII</class>
-  <method>main</method>
-  <thread>1</thread>
-  <message>Objectives values have been written to file FUN.tsv</message>
-</record>
-<record>
-  <date>2015-05-07T21:22:16</date>
-  <millis>1431044536322</millis>
-  <sequence>2</sequence>
-  <logger>jMetal</logger>
-  <level>INFO</level>
-  <class>experiment.nsgaIII.Main_NSGAIII</class>
-  <method>main</method>
-  <thread>1</thread>
-  <message>Variables values have been written to file VAR.tsv</message>
+  <message>Exception when calling method getFileWriter()</message>
+  <exception>
+    <message>java.io.FileNotFoundException: experiment/guizzo_cas/NSGAIII/F2/200_10000_0.9_0.1_UniformCrossoverBinary4NSGAIII_SwapMutationBinary4NSGAIII_BinaryTournament24NSGAIII_30/FUN_2 (No such file or directory)</message>
+    <frame>
+      <class>java.io.FileOutputStream</class>
+      <method>open</method>
+    </frame>
+    <frame>
+      <class>java.io.FileOutputStream</class>
+      <method>&lt;init&gt;</method>
+      <line>221</line>
+    </frame>
+    <frame>
+      <class>java.io.FileOutputStream</class>
+      <method>&lt;init&gt;</method>
+      <line>110</line>
+    </frame>
+    <frame>
+      <class>org.uma.jmetal.util.fileoutput.impl.DefaultFileOutputContext</class>
+      <method>getFileWriter</method>
+      <line>29</line>
+    </frame>
+    <frame>
+      <class>org.uma.jmetal.util.fileoutput.SolutionSetOutput</class>
+      <method>printObjectivesToFile</method>
+      <line>104</line>
+    </frame>
+    <frame>
+      <class>org.uma.jmetal.util.fileoutput.SolutionSetOutput$Printer</class>
+      <method>print</method>
+      <line>81</line>
+    </frame>
+    <frame>
+      <class>experiment.MTTest50</class>
+      <method>main</method>
+      <line>61</line>
+    </frame>
+  </exception>
 </record>
 </log>

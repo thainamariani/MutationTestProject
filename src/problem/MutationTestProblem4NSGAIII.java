@@ -1,16 +1,15 @@
 package problem;
 
 import java.util.BitSet;
-import jmetal.encodings.solutionType.BinarySolutionType;
 
 import jmetal.encodings.variable.Binary;
 import jmetal.util.PseudoRandom;
-
 import org.uma.jmetal.problem.ConstrainedProblem;
 import org.uma.jmetal.problem.impl.AbstractBinaryProblem;
 import org.uma.jmetal.solution.BinarySolution;
-import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.util.JMetalException;
+
+
 
 import util.InstanceReader;
 

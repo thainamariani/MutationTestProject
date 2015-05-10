@@ -23,16 +23,12 @@ package operators.selection;
 
 import java.util.Comparator;
 import java.util.List;
-
-import org.uma.jmetal.solution.Solution;
-
 import jmetal.util.PseudoRandom;
-import org.uma.jmetal.util.comparator.DominanceComparator;
-
 import org.uma.jmetal.operator.SelectionOperator;
+import org.uma.jmetal.solution.Solution;
 import org.uma.jmetal.solution.impl.GenericBinarySolution;
 import org.uma.jmetal.util.comparator.CrowdingDistanceComparator;
-import org.uma.jmetal.util.solutionattribute.impl.CrowdingDistance;
+import org.uma.jmetal.util.comparator.DominanceComparator;
 
 /**
  * This class implements an operator for binary selections using the same code

@@ -6,15 +6,8 @@
 package test.problem;
 
 import jmetal.encodings.variable.Binary;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.uma.jmetal.problem.Problem;
-import org.uma.jmetal.solution.BinarySolution;
-import problem.MutationTestProblem;
 import problem.MutationTestProblem4NSGAIII;
 
 /**

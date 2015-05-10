@@ -8,21 +8,13 @@ package test.operators.crossover;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import jmetal.encodings.variable.Binary;
-import operators.crossover.UniformCrossoverBinary;
 import operators.crossover.UniformCrossoverBinary4NSGAIII;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import org.uma.jmetal.problem.Problem;
 import org.uma.jmetal.solution.BinarySolution;
-import org.uma.jmetal.solution.Solution;
-import problem.MutationTestProblem;
 import problem.MutationTestProblem4NSGAIII;
+
 
 /**
  *

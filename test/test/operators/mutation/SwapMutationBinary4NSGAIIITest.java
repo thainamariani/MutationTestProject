@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.uma.jmetal.problem.Problem;
 import org.uma.jmetal.solution.BinarySolution;
 import org.uma.jmetal.util.binarySet.BinarySet;
+
 import problem.MutationTestProblem4NSGAIII;
 
 /**

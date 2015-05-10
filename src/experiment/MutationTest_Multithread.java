@@ -361,7 +361,7 @@ public class MutationTest_Multithread {
 
     private static String getExperimentClassName(final MutationMetaheuristic algorithm) {
         String experimentName = "experiment.MTTest45";
-        if (algorithm.equals("NSGAIII")) {
+        if (algorithm.name().equals("NSGAIII")) {
             experimentName = "experiment.MTTest50";
         }
         return experimentName;

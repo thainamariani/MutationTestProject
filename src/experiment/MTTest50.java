@@ -1,93 +1,75 @@
 package experiment;
 
-import java.util.HashMap;
 import java.util.List;
-
-import jmetal.operators.crossover.SinglePointCrossover;
-import jmetal.operators.crossover.TwoPointsCrossover;
-import operators.crossover.TwoPointsCrossoverBinary;
-import operators.crossover.UniformCrossoverBinary;
-import operators.crossover.UniformCrossoverBinary4NSGAIII;
-import operators.mutation.SwapMutationBinary4NSGAIII;
-import operators.selection.BinaryTournament24NSGAIII;
-
+import jmetal.util.JMException;
 import org.uma.jmetal.algorithm.Algorithm;
 import org.uma.jmetal.algorithm.multiobjective.nsgaiii.NSGAIII;
-import org.uma.jmetal.algorithm.multiobjective.nsgaiii.NSGAIIIBuilder;
-import org.uma.jmetal.operator.CrossoverOperator;
-import org.uma.jmetal.operator.MutationOperator;
-import org.uma.jmetal.operator.SelectionOperator;
-import org.uma.jmetal.operator.impl.crossover.SBXCrossover;
-import org.uma.jmetal.operator.impl.mutation.BitFlipMutation;
-import org.uma.jmetal.operator.impl.mutation.PolynomialMutation;
-import org.uma.jmetal.operator.impl.selection.BinaryTournamentSelection;
 import org.uma.jmetal.problem.Problem;
 import org.uma.jmetal.solution.Solution;
 import org.uma.jmetal.util.AlgorithmRunner;
 import org.uma.jmetal.util.JMetalException;
-import org.uma.jmetal.util.JMetalLogger;
-import org.uma.jmetal.util.ProblemUtils;
+import org.uma.jmetal.util.archive.impl.NonDominatedSolutionListArchive;
 import org.uma.jmetal.util.fileoutput.SolutionSetOutput;
 import org.uma.jmetal.util.fileoutput.impl.DefaultFileOutputContext;
 
-import problem.MutationTestProblem;
-import problem.MutationTestProblem4NSGAIII;
 
+import problem.MutationTestProblem4NSGAIII;
+import util.ExperimentUtil;
+
+//experimental class for jmetal 5.0
 public class MTTest50 {
 
-	public static void main(String[] args) throws JMetalException {
-            
-	    Problem problem;
-	    Algorithm algorithm;
-	    CrossoverOperator crossover;
-	    MutationOperator mutation;
-	    SelectionOperator selection;
+    public static void main(String[] args) throws JMetalException, JMException {
 
-	    //String problemName = "org.uma.jmetal.problem.multiobjective.dtlz.DTLZ3" ;
+        MutationTest_Parameters mutationParameters = ExperimentUtil.verifyParameters(args);
 
-	    //problem = ProblemUtils.loadProblem(problemName);
-	    
-	    problem = new MutationTestProblem4NSGAIII("instances/guizzo_cas.txt",1);
+        //print parameters
+        mutationParameters.PrintParameters();
 
-	    double crossoverProbability = 0.8 ;
-	    double crossoverDistributionIndex = 20.0 ;
-//	    crossover = new SBXCrossover(crossoverProbability, crossoverDistributionIndex) ;
-//	    crossover = new org.uma.jmetal.operator.impl.crossover.SinglePointCrossover(crossoverProbability) ;
-	    HashMap param = new HashMap();
-	    param.put("probability", 0.8);
-	    crossover = new UniformCrossoverBinary4NSGAIII(param);
+        //select problem
+        Problem problem = new MutationTestProblem4NSGAIII(mutationParameters.getInstance(), mutationParameters.getFitnessFunction());
 
-//	    double mutationProbability = 1.0 / problem.getNumberOfVariables() ;
-	    double mutationProbability = 0.005 ;
-	    double mutationDistributionIndex = 20.0 ;
-	    mutation = new SwapMutationBinary4NSGAIII(mutationProbability) ;
+        Algorithm algorithm = ExperimentUtil.algorithmBuilder(mutationParameters, problem);
 
-	    selection = new BinaryTournament24NSGAIII();
+        //NonDominatedSolutionList nonDominatedSolutions = new NonDominatedSolutionList();
+        NonDominatedSolutionListArchive nonDominatedSolutions = new NonDominatedSolutionListArchive();
+        String path = "";
 
-	    algorithm = new NSGAIIIBuilder(problem)
-	            .setCrossoverOperator(crossover)
-	            .setMutationOperator(mutation)
-	            .setSelectionOperator(selection)
-	            .setPopulationSize(100)
-	            .setMaxEvaluations(100000)
-	            .setDivisions(12)
-	            .build() ;
+        /* Execute the Algorithm */
+        for (int i = 0; i < mutationParameters.getExecutions(); i++) {
+            NonDominatedSolutionListArchive actualNonDominatedSolutions = new NonDominatedSolutionListArchive();
 
-	    AlgorithmRunner algorithmRunner = new AlgorithmRunner.Executor(algorithm)
-	            .execute() ;
+            System.out.println("Run: " + i);
+            AlgorithmRunner algorithmRunner = new AlgorithmRunner.Executor(algorithm).execute();
+            List<Solution> population = ((NSGAIII) algorithm).getResult();
+            long computingTime = algorithmRunner.getComputingTime();
+            System.out.println("Total time of execution: " + computingTime);
 
-	    List<Solution> population = ((NSGAIII)algorithm).getResult() ;
-	    long computingTime = algorithmRunner.getComputingTime() ;
+            /* Log messages */
+            path = String.format("experiment/%s/%s/F%s/%s", ExperimentUtil.getInstanceName(mutationParameters.getInstance()), mutationParameters.getAlgo(), mutationParameters.getFitnessFunction(), mutationParameters.getContext());
+            String pathFun = String.format("%s/FUN_%s", path, i);
+            String pathVar = String.format("%s/VAR_%s", path, i);
 
-	    new SolutionSetOutput.Printer(population)
-	            .setSeparator("\t")
-	            .setVarFileOutputContext(new DefaultFileOutputContext("VAR"))
-	            .setFunFileOutputContext(new DefaultFileOutputContext("FUN"))
-	            .print();
+            for (Solution solution : population) {
+                nonDominatedSolutions.add(solution);
+                actualNonDominatedSolutions.add(solution);
+            }
 
-	    JMetalLogger.logger.info("Total execution time: " + computingTime + "ms");
-	    JMetalLogger.logger.info("Objectives values have been written to file FUN.tsv");
-	    JMetalLogger.logger.info("Variables values have been written to file VAR.tsv");
+            ExperimentUtil.removeRepeated(actualNonDominatedSolutions);
+            System.out.println("Variables values have been writen to file " + pathVar);
+            System.out.println("Objectives values have been writen to file " + pathFun);
+            new SolutionSetOutput.Printer(actualNonDominatedSolutions.getSolutionList())
+                    .setSeparator("\t")
+                    .setVarFileOutputContext(new DefaultFileOutputContext(pathVar))
+                    .setFunFileOutputContext(new DefaultFileOutputContext(pathFun))
+                    .print();
 
-	  }
+        }
+
+        ExperimentUtil.printFinalSolutions(nonDominatedSolutions, mutationParameters);
+
+//        JMetalLogger.logger.info("Total execution time: " + computingTime + "ms");
+//        JMetalLogger.logger.info("Objectives values have been written to file FUN.tsv");
+//        JMetalLogger.logger.info("Variables values have been written to file VAR.tsv");
+    }
 }

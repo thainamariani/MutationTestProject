@@ -7,21 +7,16 @@ package operators.mutation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
+import jmetal.encodings.solutionType.BinarySolutionType;
+import jmetal.util.Configuration;
+import jmetal.util.JMException;
+import jmetal.util.PseudoRandom;
 import org.uma.jmetal.operator.MutationOperator;
 import org.uma.jmetal.solution.BinarySolution;
 import org.uma.jmetal.solution.impl.GenericBinarySolution;
 import org.uma.jmetal.util.binarySet.BinarySet;
-
-import jmetal.core.Solution;
-import jmetal.encodings.solutionType.BinarySolutionType;
-import jmetal.encodings.variable.Binary;
-import jmetal.operators.mutation.Mutation;
-import jmetal.util.Configuration;
-import jmetal.util.JMException;
-import jmetal.util.PseudoRandom;
 
 /**
  *

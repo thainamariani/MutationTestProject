@@ -19,12 +19,13 @@ public class MOEA_Main {
 		// solve using NSGA-II
 		NondominatedPopulation result = new Executor()
 				.withProblemClass(MutationTestProblem4MOEA.class, "instances/guizzo_cas.txt")
-				.withAlgorithm("NSGAII")
+				.withAlgorithm("NSGAIII")
 				.withMaxEvaluations(2000000)
-				.withProperty("populationSize", 100)
+				.withProperty("populationSize", 200)
 				.withProperty("operator", "ux+swap")
-				.withProperty("ux.rate", "0.8")
-				.withProperty("swap.rate", "0.005")
+				.withProperty("ux.rate", "0.9")
+				.withProperty("swap.rate", "0.1")
+                                .withProperty("divisions", "12")
 				.distributeOnAllCores()
 				.run();
 		

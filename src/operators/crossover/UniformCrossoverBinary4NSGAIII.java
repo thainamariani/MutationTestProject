@@ -24,11 +24,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import jmetal.encodings.solutionType.BinarySolutionType;
 import jmetal.util.Configuration;
 import jmetal.util.JMException;
 import jmetal.util.PseudoRandom;
-
 import org.uma.jmetal.operator.CrossoverOperator;
 import org.uma.jmetal.solution.BinarySolution;
 import org.uma.jmetal.solution.impl.GenericBinarySolution;
