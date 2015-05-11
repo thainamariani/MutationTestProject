@@ -22,7 +22,7 @@ public class MOEA_Main {
 				.withAlgorithm("NSGAIII")
 				.withMaxEvaluations(2000000)
 				.withProperty("populationSize", 200)
-				.withProperty("operator", "ux+swap")
+				.withProperty("operator", "hux+bf")
 				.withProperty("ux.rate", "0.9")
 				.withProperty("swap.rate", "0.1")
                                 .withProperty("divisions", "12")

@@ -13,16 +13,16 @@ package experiment;
 public class MutationTest_Settings {
 
     public static final String[] INSTANCES = {
-        //"instances/bisect.txt",
-        //"instances/bub.txt",
-        //"instances/find.txt",
-        //"instances/fourballs.txt",
-        //"instances/mid.txt",
-        //"instances/trityp.txt",
+        "instances/bisect.txt",
+        "instances/bub.txt",
+        "instances/find.txt",
+        "instances/fourballs.txt",
+        "instances/mid.txt",
+        "instances/trityp.txt",
         "instances/guizzo_cas.txt",
-        //"instances/guizzo_james.txt",
-        //"instances/guizzo_save.txt",
-        //"instances/guizzo_weatherstation.txt"
+        "instances/guizzo_james.txt",
+        "instances/guizzo_save.txt",
+        "instances/guizzo_weatherstation.txt"
     };
 
     public static final MutationMetaheuristic[] ALGORITHMS = {
@@ -38,15 +38,15 @@ public class MutationTest_Settings {
     };
 
     public static final int[] POPULATION_SIZE = {
-        //50,
-        //100,
+        50,
+        100,
         200
     };
 
     public static final int[] GENERATIONS = {
-        //100,
-        //1000,
-        10000
+        100,
+        300,
+        600
     };
 
     public static final double[] CROSSOVER_PROBABILITY = {
