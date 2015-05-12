@@ -207,4 +207,24 @@ public class MutationTestProblem extends Problem {
 
         return total;
     }
+
+	public int getNumberOfTestSuite() {
+		return numberOfTestSuite;
+	}
+
+	public void setNumberOfTestSuite(int numberOfTestSuite) {
+		this.numberOfTestSuite = numberOfTestSuite;
+	}
+
+	public int getNumberOfMutants() {
+		return numberOfMutants;
+	}
+
+	public void setNumberOfMutants(int numberOfMutants) {
+		this.numberOfMutants = numberOfMutants;
+	}
+	
+	public boolean isKilled(int testSuite, int mutant) {
+		return coverage[mutant][testSuite] == 1;
+	}
 }
