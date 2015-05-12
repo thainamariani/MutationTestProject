@@ -101,7 +101,8 @@ public class IBEA extends Algorithm{
       else
       {
          volume = calcHypervolumeIndicator(p_ind_a, p_ind_b, d - 1, maximumValues, minimumValues) *
-         (max - b) / r;
+         (max - a) / r;
+        //(max - b) / r;
       }
     }
 

@@ -17,7 +17,7 @@ import util.ResultsUtil;
  * @author thaina
  */
 public class MultiObjectiveResults {
-
+    
     public static void main(String[] args) throws IOException, FileNotFoundException, InterruptedException {
 
         //hypervolume
@@ -32,19 +32,31 @@ public class MultiObjectiveResults {
         instances.add("guizzo_weatherstation");
         instances.add("mid");
         instances.add("trityp");
-
+        
         List<String> algorithms = new ArrayList<>();
         algorithms.add("IBEA");
         algorithms.add("NSGAIII");
         algorithms.add("NSGAII");
         algorithms.add("SPEA2");
-
+        
         int numberOfObjectives = 2;
         int numberOfExecutions = 30;
 
-        //List<Path> paths = ResultsUtil.getPaths(instances, algorithms);
-        //ResultsUtil.writeHypervolume(paths, numberOfObjectives, numberOfExecutions);
-        //kruskal wallis for tuning
+        //calculateHypervolumeResults(instances, algorithms, numberOfObjectives, numberOfExecutions);
+        //calculateKruskalWallisForTuning(instances, algorithms, numberOfExecutions);
+        calculateKruskalWallisForAlgorithms(instances, algorithms, numberOfExecutions);
+    }
+    
+    private static void calculateKruskalWallisForAlgorithms(List<String> instances, List<String> algorithms, int numberOfExecutions) throws IOException, InterruptedException {
+        for (String instance : instances) {
+            List<String> instancesKruskal = new ArrayList<>();
+            instancesKruskal.add(instance);
+            List<Path> paths = ResultsUtil.getPaths(instancesKruskal, algorithms);
+            ResultsUtil.doKruskalWallisTest(paths, numberOfExecutions, "Hypervolume_");
+        }
+    }
+    
+    private static void calculateKruskalWallisForTuning(List<String> instances, List<String> algorithms, int numberOfExecutions) throws IOException, InterruptedException {
         for (String instance : instances) {
             List<String> instancesKruskal = new ArrayList<>();
             instancesKruskal.add(instance);
@@ -55,5 +67,10 @@ public class MultiObjectiveResults {
                 ResultsUtil.doKruskalWallisTest(paths, numberOfExecutions, "Hypervolume_");
             }
         }
+    }
+    
+    private static void calculateHypervolumeResults(List<String> instances, List<String> algorithms, int numberOfObjectives, int numberOfExecutions) throws IOException {
+        List<Path> paths = ResultsUtil.getPaths(instances, algorithms);
+        ResultsUtil.writeHypervolume(paths, numberOfObjectives, numberOfExecutions);
     }
 }
