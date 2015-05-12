@@ -20,8 +20,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package results;
 
-import java.util.logging.Level;
-import jmetal.qualityIndicator.QualityIndicator;
 import jmetal.qualityIndicator.util.MetricsUtil;
 
 /**

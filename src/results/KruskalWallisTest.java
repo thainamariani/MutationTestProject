@@ -91,7 +91,7 @@ public class KruskalWallisTest {
                             entry1Map.put(entry2, true);
                             entry2Map.put(entry1, true);
                             break;
-                        } else {
+                        } else if (line.contains("FALSE")) {
                             entry1Map.put(entry2, false);
                             entry2Map.put(entry1, false);
                             break;

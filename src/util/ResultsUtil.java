@@ -14,8 +14,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import org.apache.commons.math3.stat.descriptive.moment.Mean;
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
+import results.HypervolumeCalculator;
+import results.KruskalWallisTest;
 
 /**
  *
@@ -31,6 +35,16 @@ public class ResultsUtil {
         }
         StandardDeviation sd = new StandardDeviation();
         return sd.evaluate(funArray);
+    }
+
+    //return the average
+    public static double getAverage(List<Double> fun) {
+        double[] funArray = new double[fun.size()];
+        for (int i = 0; i < funArray.length; i++) {
+            funArray[i] = fun.get(i);
+        }
+        Mean mean = new Mean();
+        return mean.evaluate(funArray);
     }
 
     //return the number of killed mutants of the solution passed
@@ -204,7 +218,9 @@ public class ResultsUtil {
                     File[] subDirectory = file.listFiles();
                     if (subDirectory != null) {
                         for (File dir : subDirectory) {
-                            paths.add(dir.toPath());
+                            if (!dir.toPath().toString().contains("KruskalWallisResults")) {
+                                paths.add(dir.toPath());
+                            }
                         }
                     }
                 }
@@ -213,4 +229,84 @@ public class ResultsUtil {
         return paths;
     }
 
+    //write the hypervolume results for each experiment passed
+    public static void writeHypervolume(List<Path> paths, int numberOfObjectives, int numberOfExecutions) throws IOException {
+        HypervolumeCalculator hypervolumeCalculator = new HypervolumeCalculator(numberOfObjectives);
+
+        for (Path path : paths) {
+            for (int i = 0; i < numberOfExecutions; i++) {
+                if (!path.toString().endsWith("KruskalWallisResults")) {
+                    hypervolumeCalculator.addParetoFront(path.toString() + "/FUN_" + i);
+                }
+            }
+        }
+        for (Path path : paths) {
+            if (!path.toString().endsWith("KruskalWallisResults")) {
+                List<Double> allHypervolumes = new ArrayList<>();
+                for (int i = 0; i < numberOfExecutions; i++) {
+                    try (FileWriter fileWriterIndividual = new FileWriter(path + "/Hypervolume_" + i)) {
+                        double hypervolume = hypervolumeCalculator.execute(path.toString() + "/FUN_" + i);
+                        fileWriterIndividual.write("" + hypervolume);
+                        allHypervolumes.add(hypervolume);
+                    }
+                }
+
+                try (final FileWriter fileWriter = new FileWriter(path + "/Hypervolume_Results")) {
+                    //write the hypervolume average and standard deviation
+                    fileWriter.write("Average: " + getAverage(allHypervolumes) + "\n");
+                    fileWriter.write("Standard Deviation: " + getStandardDeviation(allHypervolumes));
+                }
+            }
+        }
+    }
+
+    public static void writeKruskalWallisTest(List<Path> directories, HashMap<String, HashMap<String, Boolean>> resultKruskal) throws IOException {
+        if (!directories.isEmpty()) {
+            Path parent = directories.get(0).getParent();
+            File writtenFile = new File(parent + "/KruskalWallisResults");
+            writtenFile.createNewFile();
+            FileWriter fw = new FileWriter(writtenFile.getAbsoluteFile());
+            BufferedWriter bw = new BufferedWriter(fw);
+            for (int i = 0; i < directories.size() - 1; i++) {
+                for (int j = i + 1; j < directories.size(); j++) {
+                    Boolean difference = resultKruskal.get(directories.get(i).toString()).get(directories.get(j).toString());
+                    bw.write("Configs");
+                    bw.newLine();
+                    bw.write(directories.get(i).toString());
+                    bw.newLine();
+                    bw.write(directories.get(j).toString());
+                    bw.newLine();
+                    bw.write("Different? " + difference);
+                    bw.newLine();
+                    bw.newLine();
+                    bw.write("------------------------------------------------------");
+                    bw.newLine();
+                    bw.newLine();
+                }
+            }
+            bw.close();
+        }
+    }
+
+    //must be passed as parameters the directories with the experiments to be compared and the number of executions performed
+    public static void doKruskalWallisTest(List<Path> directories, int executions, String archiveSuffix) throws FileNotFoundException, IOException, InterruptedException {
+        KruskalWallisTest kruskal = new KruskalWallisTest();
+        HashMap<String, double[]> values = new HashMap<>();
+        for (Path directory : directories) {
+            double[] funArray = new double[executions];
+            for (int i = 0; i < executions; i++) {
+                String sCurrentLine;
+                BufferedReader br = new BufferedReader(new FileReader(directory + "/" + archiveSuffix + i));
+                while ((sCurrentLine = br.readLine()) != null) {
+                    if (!"".equals(sCurrentLine)) {
+                        funArray[i] = Double.parseDouble(sCurrentLine);
+                        break;
+                    }
+                }
+                br.close();
+            }
+            values.put(directory.toString(), funArray);
+        }
+        writeKruskalWallisTest(directories, kruskal.test(values));
+    }
 }
