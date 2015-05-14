@@ -3,11 +3,11 @@
 
 Number of Max Threads = 1
 Number of Running Threads = 1
-Number of Remaining Threads = 0
-Number of Successfully Finished Threads = 0
+Number of Remaining Threads = 6
+Number of Successfully Finished Threads = 1
 
-Active Threads = [Thread[200_10000_0.9_0.1_UniformCrossoverBinary4NSGAIII_SwapMutationBinary4NSGAIII_BinaryTournament24NSGAIII_30,5,main]]
+Active Threads = [Thread[50_100_0.8_0.005_SinglePointCrossover_SwapMutationBinary_BinaryTournament2_30,5,main]]
 
-Queued Threads = []
+Queued Threads = [Thread[50_100_0.8_0.005_UniformCrossoverBinary_BitFlipMutation_BinaryTournament2_30,5,main], Thread[50_100_0.8_0.005_UniformCrossoverBinary_SwapMutationBinary_BinaryTournament2_30,5,main], Thread[50_100_0.8_0.005_SinglePointCrossover_BitFlipMutation_BinaryTournament2_30,5,main], Thread[50_100_0.8_0.005_SinglePointCrossover_SwapMutationBinary_BinaryTournament2_30,5,main], Thread[50_100_0.8_0.005_UniformCrossoverBinary_BitFlipMutation_BinaryTournament2_30,5,main], Thread[50_100_0.8_0.005_UniformCrossoverBinary_SwapMutationBinary_BinaryTournament2_30,5,main]]
 
-Finished Threads = []
+Finished Threads = [50_100_0.8_0.005_SinglePointCrossover_BitFlipMutation_BinaryTournament2_30]

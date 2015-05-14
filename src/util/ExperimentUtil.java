@@ -19,6 +19,8 @@ import org.uma.jmetal.algorithm.multiobjective.nsgaiii.NSGAIIIBuilder;
 import org.uma.jmetal.operator.CrossoverOperator;
 import org.uma.jmetal.operator.MutationOperator;
 import org.uma.jmetal.operator.SelectionOperator;
+import org.uma.jmetal.operator.impl.crossover.SinglePointCrossover;
+import org.uma.jmetal.operator.impl.mutation.BitFlipMutation;
 import org.uma.jmetal.problem.Problem;
 import org.uma.jmetal.solution.Solution;
 import org.uma.jmetal.util.archive.impl.NonDominatedSolutionListArchive;
@@ -179,13 +181,13 @@ public class ExperimentUtil {
 
         CrossoverOperator crossover = getCrossoverOperator(mutationParameters);
         System.out.println("CrossoverOperator: " + crossover);
-        
+
         MutationOperator mutation = getMutationOperator(mutationParameters);
         System.out.println("mutationOperator:" + mutation);
-        
+
         SelectionOperator selection = getSelectionOperator(mutationParameters);
         System.out.println("selectionOperator:" + selection);
-        
+
         int maxEvaluations = mutationParameters.getPopulationSize() * mutationParameters.getGenerations();
 
         if (mutationParameters.getAlgo().name().equalsIgnoreCase("NSGAIII")) {
@@ -195,7 +197,7 @@ public class ExperimentUtil {
                     .setSelectionOperator(selection)
                     .setPopulationSize(mutationParameters.getPopulationSize())
                     .setMaxEvaluations(maxEvaluations)
-                    .setDivisions(12)
+                    .setDivisions(mutationParameters.getPopulationSize())
                     .build();
         }
         return algorithm;
@@ -245,21 +247,25 @@ public class ExperimentUtil {
     }
 
     public static MutationOperator selectMutationOperator(MutationTest_Parameters mutationParameters) {
-        if (mutationParameters.getMutationOperator().equals("SwapMutationBinary4NSGAIII")) {
+        if (mutationParameters.getMutationOperator().equals("SwapMutationBinary")) {
             return new SwapMutationBinary4NSGAIII(mutationParameters.getMutationProbability());
+        } else if (mutationParameters.getMutationOperator().equals("BitFlipMutation")) {
+            return new BitFlipMutation(mutationParameters.getMutationProbability());
         }
         return null;
     }
 
-    public static CrossoverOperator selectCrossoverOperator(HashMap parameters, MutationTest_Parameters mutationParameters) {
-        if (mutationParameters.getCrossoverOperator().equals("UniformCrossoverBinary4NSGAIII")) {
+    public static CrossoverOperator selectCrossoverOperator(HashMap parameters, MutationTest_Parameters crossoverParameters) {
+        if (crossoverParameters.getCrossoverOperator().equals("UniformCrossoverBinary")) {
             return new UniformCrossoverBinary4NSGAIII(parameters);
+        } else if (crossoverParameters.getCrossoverOperator().equals("SinglePointCrossover")) {
+            return new SinglePointCrossover(crossoverParameters.getCrossoverProbability());
         }
         return null;
     }
 
     public static SelectionOperator selectSelectionOperator(MutationTest_Parameters mutationParameters) {
-        if (mutationParameters.getSelectionOperator().equals("BinaryTournament24NSGAIII")) {
+        if (mutationParameters.getSelectionOperator().equals("BinaryTournament2")) {
             return new BinaryTournament24NSGAIII();
         }
         return null;

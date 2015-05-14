@@ -218,7 +218,7 @@ public class ResultsUtil {
                     File[] subDirectory = file.listFiles();
                     if (subDirectory != null) {
                         for (File dir : subDirectory) {
-                            if (!dir.toPath().toString().contains("KruskalWallisResults")) {
+                            if (!dir.toPath().toString().contains("KruskalWallisResults") && !dir.toPath().toString().contains("Hypervolume_Results")) {
                                 paths.add(dir.toPath());
                             }
                         }
@@ -235,26 +235,34 @@ public class ResultsUtil {
 
         for (Path path : paths) {
             for (int i = 0; i < numberOfExecutions; i++) {
-                if (!path.toString().endsWith("KruskalWallisResults")) {
+                if (!path.toString().endsWith("KruskalWallisResults") && !path.toString().endsWith("Hypervolume_Results")) {
                     hypervolumeCalculator.addParetoFront(path.toString() + "/FUN_" + i);
                 }
             }
         }
-        for (Path path : paths) {
-            if (!path.toString().endsWith("KruskalWallisResults")) {
-                List<Double> allHypervolumes = new ArrayList<>();
-                for (int i = 0; i < numberOfExecutions; i++) {
-                    try (FileWriter fileWriterIndividual = new FileWriter(path + "/Hypervolume_" + i)) {
-                        double hypervolume = hypervolumeCalculator.execute(path.toString() + "/FUN_" + i);
-                        fileWriterIndividual.write("" + hypervolume);
-                        allHypervolumes.add(hypervolume);
+        try (final FileWriter fileWriter = new FileWriter(paths.get(0).getParent().getParent().getParent().toString() + "/Hypervolume_Results")) {
+            for (Path path : paths) {
+                if (!path.toString().endsWith("KruskalWallisResults") && !path.toString().endsWith("Hypervolume_Results")) {
+                    List<Double> allHypervolumes = new ArrayList<>();
+                    for (int i = 0; i < numberOfExecutions; i++) {
+                        try (FileWriter fileWriterIndividual = new FileWriter(path + "/Hypervolume_" + i)) {
+                            double hypervolume = hypervolumeCalculator.execute(path.toString() + "/FUN_" + i);
+                            fileWriterIndividual.write("" + hypervolume);
+                            allHypervolumes.add(hypervolume);
+                        }
                     }
-                }
 
-                try (final FileWriter fileWriter = new FileWriter(path + "/Hypervolume_Results")) {
-                    //write the hypervolume average and standard deviation
-                    fileWriter.write("Average: " + getAverage(allHypervolumes) + "\n");
-                    fileWriter.write("Standard Deviation: " + getStandardDeviation(allHypervolumes));
+                    try (final FileWriter fileWriter2 = new FileWriter(path + "/Hypervolume_Results")) {
+                        //write the hypervolume average and standard deviation in a file for each algorithm
+                        fileWriter2.write("Average: " + getAverage(allHypervolumes) + "\n");
+                        fileWriter2.write("Standard Deviation: " + getStandardDeviation(allHypervolumes) + "\n");
+
+                        //write the hypervolume average and standard deviation in a file common for all algorithms
+                        fileWriter.write("Path: " + path.toString() + "\n");
+                        fileWriter.write("Average: " + getAverage(allHypervolumes) + "\n");
+                        fileWriter.write("Standard Deviation: " + getStandardDeviation(allHypervolumes) + "\n\n");
+                        fileWriter.write("----------------------------------------------------------------------------------\n\n");
+                    }
                 }
             }
         }
@@ -262,9 +270,11 @@ public class ResultsUtil {
 
     public static void writeKruskalWallisTest(List<Path> directories, HashMap<String, HashMap<String, Boolean>> resultKruskal) throws IOException {
         if (!directories.isEmpty()) {
-            Path parent = directories.get(0).getParent();
-            File writtenFile = new File(parent + "/KruskalWallisResults");
-            writtenFile.createNewFile();
+            Path parent = directories.get(0).getParent().getParent().getParent();
+            File writtenFile = new File(parent + "/KruskalWallisResults_" + directories.get(0).getParent().getParent().getFileName());
+            if (!writtenFile.exists()) {
+                writtenFile.createNewFile();
+            }
             FileWriter fw = new FileWriter(writtenFile.getAbsoluteFile());
             BufferedWriter bw = new BufferedWriter(fw);
             for (int i = 0; i < directories.size() - 1; i++) {

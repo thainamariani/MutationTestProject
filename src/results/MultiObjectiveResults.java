@@ -17,10 +17,9 @@ import util.ResultsUtil;
  * @author thaina
  */
 public class MultiObjectiveResults {
-    
+
     public static void main(String[] args) throws IOException, FileNotFoundException, InterruptedException {
 
-        //hypervolume
         List<String> instances = new ArrayList<>();
         instances.add("bisect");
         instances.add("bub");
@@ -32,13 +31,13 @@ public class MultiObjectiveResults {
         instances.add("guizzo_weatherstation");
         instances.add("mid");
         instances.add("trityp");
-        
+
         List<String> algorithms = new ArrayList<>();
         algorithms.add("IBEA");
         algorithms.add("NSGAIII");
         algorithms.add("NSGAII");
         algorithms.add("SPEA2");
-        
+
         int numberOfObjectives = 2;
         int numberOfExecutions = 30;
 
@@ -46,7 +45,7 @@ public class MultiObjectiveResults {
         //calculateKruskalWallisForTuning(instances, algorithms, numberOfExecutions);
         calculateKruskalWallisForAlgorithms(instances, algorithms, numberOfExecutions);
     }
-    
+
     private static void calculateKruskalWallisForAlgorithms(List<String> instances, List<String> algorithms, int numberOfExecutions) throws IOException, InterruptedException {
         for (String instance : instances) {
             List<String> instancesKruskal = new ArrayList<>();
@@ -55,7 +54,7 @@ public class MultiObjectiveResults {
             ResultsUtil.doKruskalWallisTest(paths, numberOfExecutions, "Hypervolume_");
         }
     }
-    
+
     private static void calculateKruskalWallisForTuning(List<String> instances, List<String> algorithms, int numberOfExecutions) throws IOException, InterruptedException {
         for (String instance : instances) {
             List<String> instancesKruskal = new ArrayList<>();
@@ -68,9 +67,19 @@ public class MultiObjectiveResults {
             }
         }
     }
-    
+
     private static void calculateHypervolumeResults(List<String> instances, List<String> algorithms, int numberOfObjectives, int numberOfExecutions) throws IOException {
-        List<Path> paths = ResultsUtil.getPaths(instances, algorithms);
-        ResultsUtil.writeHypervolume(paths, numberOfObjectives, numberOfExecutions);
+        for (String instance : instances) {
+            List<String> instanceAux = new ArrayList<>();
+            instanceAux.add(instance);
+            List<Path> paths = ResultsUtil.getPaths(instanceAux, algorithms);
+            //write the files to be read
+            System.out.println("Instância: " + instance);
+            for (Path path : paths) {
+                System.out.println(path);
+            }
+            System.out.println("--------------------------------------------------------------");
+            ResultsUtil.writeHypervolume(paths, numberOfObjectives, numberOfExecutions);
+        }
     }
 }

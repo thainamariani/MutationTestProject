@@ -13,7 +13,7 @@ package experiment;
 public class MutationTest_Settings {
 
     public static final String[] INSTANCES = {
-        "instances/bisect.txt",
+        //"instances/bisect.txt",
         "instances/bub.txt",
         "instances/find.txt",
         "instances/fourballs.txt",
@@ -33,7 +33,7 @@ public class MutationTest_Settings {
         //MutationMetaheuristic.HillClimbingAscendentWithReplacement
         //MutationMetaheuristic.NSGAII,
         //MutationMetaheuristic.SPEA2,
-        //MutationMetaheuristic.IBEA,
+        MutationMetaheuristic.IBEA,
         MutationMetaheuristic.NSGAIII
     };
 
@@ -50,33 +50,32 @@ public class MutationTest_Settings {
     };
 
     public static final double[] CROSSOVER_PROBABILITY = {
-        //0.8,
+        0.8,
         0.9
     };
 
     public static final double[] MUTATION_PROBABILITY = {
-        //0.05,
+        0.005,
+        0.01,
         0.1
     };
 
     public static final String[] CROSSOVER_OPERATORS = {
-        //"SinglePointCrossover",
-        //"TwoPointsCrossoverBinary",
-        //"UniformCrossoverBinary"
-        "UniformCrossoverBinary4NSGAIII"
+        "SinglePointCrossover",
+        "UniformCrossoverBinary"
+    //"TwoPointsCrossoverBinary",
+    //"UniformCrossoverBinary"
     };
 
     public static final String[] MUTATION_OPERATORS = {
-        //"BitFlipMutation",
-        //"SwapMutationBinary"
-        "SwapMutationBinary4NSGAIII"
+        "BitFlipMutation",
+        "SwapMutationBinary"
     };
 
     public static final String[] SELECTION_OPERATORS = {
-        //"BinaryTournament2",
-        //"RouletteWheel",
-        //"LinearRanking"
-        "BinaryTournament24NSGAIII"
+        "BinaryTournament2", //"RouletteWheel",
+    //"LinearRanking"
+    //"BinaryTournament2"
     };
 
     public static final int[] FITNESS_FUNCTIONS = {
