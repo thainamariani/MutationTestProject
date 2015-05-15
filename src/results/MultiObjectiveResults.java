@@ -41,9 +41,9 @@ public class MultiObjectiveResults {
         int numberOfObjectives = 2;
         int numberOfExecutions = 30;
 
-        //calculateHypervolumeResults(instances, algorithms, numberOfObjectives, numberOfExecutions);
+        calculateHypervolumeResults(instances, algorithms, numberOfObjectives, numberOfExecutions);
         //calculateKruskalWallisForTuning(instances, algorithms, numberOfExecutions);
-        calculateKruskalWallisForAlgorithms(instances, algorithms, numberOfExecutions);
+        //calculateKruskalWallisForAlgorithms(instances, algorithms, numberOfExecutions);
     }
 
     private static void calculateKruskalWallisForAlgorithms(List<String> instances, List<String> algorithms, int numberOfExecutions) throws IOException, InterruptedException {

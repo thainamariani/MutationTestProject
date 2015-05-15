@@ -1,6 +1,5 @@
 package results;
 
-import jmetal.core.Solution;
 import jmetal.core.SolutionSet;
 
 /**
@@ -21,8 +20,7 @@ public class HypervolumeCalculator extends Calculator {
     private final Hypervolume hypervolume;
 
     private final int numberOfObjectives;
-
-    private final Solution referencePoint;
+    private final double offset;
 
     /**
      * Constructor for the hypervolume calculator.
@@ -34,19 +32,15 @@ public class HypervolumeCalculator extends Calculator {
     }
 
     /**
-     * Constructor for the calculator.
+     * Constructor for the hypervolume calculator.
      *
      * @param numberOfObjectives the number of objectives for the problem.
-     * @param offset offset used for the reference point.
+     * @param offset offset for the hypervolume reference point.
      */
     public HypervolumeCalculator(int numberOfObjectives, double offset) {
         this.numberOfObjectives = numberOfObjectives;
         this.hypervolume = new Hypervolume();
-
-        referencePoint = new Solution(numberOfObjectives);
-        for (int i = 0; i < numberOfObjectives; i++) {
-            referencePoint.setObjective(i, 1 + offset);
-        }
+        this.offset = offset;
     }
 
     /**
@@ -74,6 +68,10 @@ public class HypervolumeCalculator extends Calculator {
     public double execute(SolutionSet front) {
         if (internalPopulation.size() != 0) {
             double[] maximumValues = metricsUtil.getMaximumValues(internalPopulation.writeObjectivesToMatrix(), numberOfObjectives);
+            for (int i = 0; i < maximumValues.length; i++) {
+                //Adding an offset to properly calculate the hypervolume reference point
+                maximumValues[i] = maximumValues[i] + offset;
+            }
             double[] minimumValues = metricsUtil.getMinimumValues(internalPopulation.writeObjectivesToMatrix(), numberOfObjectives);
             return hypervolume.hypervolume(front.writeObjectivesToMatrix(), maximumValues, minimumValues);
         }
