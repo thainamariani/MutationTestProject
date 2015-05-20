@@ -98,6 +98,7 @@ public class KruskalWallisTest {
                         }
                     }
                 }
+                scanner.close();
             }
         }
         System.out.println(script);
