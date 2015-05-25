@@ -16,6 +16,9 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import jmetal.core.SolutionSet;
+import jmetal.qualityIndicator.util.MetricsUtil;
+import jmetal.util.NonDominatedSolutionList;
 import org.apache.commons.math3.stat.descriptive.moment.Mean;
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 import results.HypervolumeCalculator;
@@ -192,7 +195,7 @@ public class ResultsUtil {
             System.out.println(bestDirectory);
         }
     }
-
+    
     public static void selectConfigurationPaths(List<Path> paths) throws IOException, FileNotFoundException, InterruptedException {
         List<Path> selectedDirectories = new ArrayList<>();
         String actualParentDirectory = paths.get(0).getParent().toString();
@@ -232,7 +235,7 @@ public class ResultsUtil {
     //write the hypervolume results for each experiment passed
     public static void writeHypervolume(List<Path> paths, int numberOfObjectives, int numberOfExecutions) throws IOException {
         HypervolumeCalculator hypervolumeCalculator = new HypervolumeCalculator(numberOfObjectives);
-
+        
         for (Path path : paths) {
             for (int i = 0; i < numberOfExecutions; i++) {
                 if (!path.toString().endsWith("KruskalWallisResults") && !path.toString().endsWith("Hypervolume_Results")) {
@@ -251,7 +254,7 @@ public class ResultsUtil {
                             allHypervolumes.add(hypervolume);
                         }
                     }
-
+                    
                     try (final FileWriter fileWriter2 = new FileWriter(path + "/Hypervolume_Results")) {
                         //write the hypervolume average and standard deviation in a file for each algorithm
                         fileWriter2.write("Average: " + getAverage(allHypervolumes) + "\n");
@@ -267,7 +270,7 @@ public class ResultsUtil {
             }
         }
     }
-
+    
     public static void writeKruskalWallisTest(List<Path> directories, HashMap<String, HashMap<String, Boolean>> resultKruskal) throws IOException {
         if (!directories.isEmpty()) {
             Path parent = directories.get(0).getParent().getParent().getParent();
@@ -295,6 +298,7 @@ public class ResultsUtil {
                 }
             }
             bw.close();
+            fw.close();
         }
     }
 
@@ -318,5 +322,43 @@ public class ResultsUtil {
             values.put(directory.toString(), funArray);
         }
         writeKruskalWallisTest(directories, kruskal.test(values));
+    }
+    
+    public static void createPFTrue(List<Path> paths) throws FileNotFoundException, IOException {
+        MetricsUtil metricsUtil = new MetricsUtil();
+        NonDominatedSolutionList nonDominatedSolutionList = new NonDominatedSolutionList();
+
+        //calculate PFtrue
+        for (Path path : paths) {
+            SolutionSet solutions = metricsUtil.readNonDominatedSolutionSet(path + "/FUN_All");
+            for (int i = 0; i < solutions.size(); i++) {
+                nonDominatedSolutionList.add(solutions.get(i));
+            }
+        }
+        
+        ExperimentUtil.removeRepeated(nonDominatedSolutionList);
+
+        //read PFtrue
+        double[][] trueFront = nonDominatedSolutionList.writeObjectivesToMatrix();
+
+        //write PFtrue
+        try (FileWriter writer = new FileWriter(paths.get(0).getParent().getParent().getParent() + "/Pareto.txt")) {
+            writer.write(nonDominatedSolutionList.size() + "\n\n");
+
+            //write PFknown
+            for (Path path : paths) {
+                int count = 0;
+                double[][] solutions = metricsUtil.readFront(path + "/FUN_All");
+                for (double[] solution : solutions) {
+                    double distance = metricsUtil.distanceToClosedPoint(solution, trueFront);
+                    if (distance == 0) {
+                        count++;
+                    }
+                }
+                writer.write(path.getParent().toString() + ": ");
+                writer.write(solutions.length + " (" + count + ")\n\n");
+            }
+        }
+        
     }
 }
